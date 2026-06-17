@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<title>Opce · Vypracované otázky KMA/MFM</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<style>
+:root{
+  --paper:#E9EDF1; --grid:#DBE1E8; --sheet:#FFFFFF;
+  --ink:#1B2733; --ink-soft:#52626F; --ink-faint:#8593A0;
+  --accent:#BC2B2B; --accent-deep:#9E2222; --accent-wash:#FBEDED;
+  --rule:#E6EAEE; --border:#DCE2E8; --tint:#F1F4F7;
+  --maxw:760px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{
+  margin:0;color:var(--ink);line-height:1.7;
+  font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),
+                   linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:26px 26px;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+
+/* ---- topbar (doc pages) ---- */
+.topbar{
+  position:sticky;top:0;z-index:50;display:flex;align-items:center;
+  justify-content:space-between;gap:1rem;
+  padding:.7rem clamp(1rem,4vw,2rem);
+  background:rgba(255,255,255,.82);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+  font-family:"IBM Plex Mono",monospace;font-size:.8rem;
+}
+.topbar__back{color:var(--ink-soft);text-decoration:none}
+.topbar__back:hover{color:var(--accent)}
+.topbar__tag{color:var(--ink-faint);letter-spacing:.08em;text-transform:uppercase}
+
+/* ---- sheet ---- */
+.sheet{
+  max-width:calc(var(--maxw) + 7rem);
+  margin:clamp(1.2rem,4vw,3rem) auto;
+  background:var(--sheet);border:1px solid var(--border);border-radius:6px;
+  box-shadow:0 1px 2px rgba(27,39,51,.04),0 18px 40px -28px rgba(27,39,51,.28);
+  padding:clamp(1.5rem,5vw,3.6rem) clamp(1.2rem,5vw,3.5rem);
+}
+.content{max-width:var(--maxw);margin:0 auto}
+
+/* ---- headings ---- */
+.content h1{
+  font-family:"IBM Plex Serif",Georgia,serif;font-weight:600;
+  font-size:clamp(1.7rem,4.2vw,2.15rem);line-height:1.18;letter-spacing:-.01em;
+  margin:2.8rem 0 1.2rem;
+}
+.content h1:first-child{margin-top:0}
+.content h1::after{content:"";display:block;width:3rem;height:3px;
+  margin-top:.7rem;background:var(--accent)}
+.content h2{
+  font-family:"IBM Plex Serif",Georgia,serif;font-weight:600;
+  font-size:clamp(1.22rem,2.6vw,1.48rem);line-height:1.28;
+  margin:2.5rem 0 .85rem;padding-top:1.3rem;border-top:1px solid var(--rule);
+}
+.content h3{
+  font-family:"IBM Plex Sans",sans-serif;font-weight:600;font-size:1.08rem;
+  line-height:1.35;margin:1.8rem 0 .5rem;
+}
+.content h4{
+  font-family:"IBM Plex Sans",sans-serif;font-weight:600;font-size:.97rem;
+  margin:1.4rem 0 .4rem;color:var(--ink-soft);letter-spacing:.01em;
+}
+
+/* ---- text ---- */
+.content p{margin:.85rem 0}
+.content ul,.content ol{margin:.85rem 0;padding-left:1.45rem}
+.content li{margin:.4rem 0}
+.content li::marker{color:var(--accent)}
+.content strong{font-weight:600;color:var(--ink)}
+.content em{font-style:italic}
+.content a{color:var(--accent);text-decoration:none;
+  border-bottom:1px solid rgba(188,43,43,.35)}
+.content a:hover{border-bottom-color:var(--accent)}
+.content code{font-family:"IBM Plex Mono",monospace;font-size:.88em;
+  background:var(--tint);padding:.1em .35em;border-radius:3px}
+
+/* ---- blockquote callouts ---- */
+.content blockquote{
+  margin:1.4rem 0;padding:.9rem 1.1rem;background:var(--accent-wash);
+  border-left:3px solid var(--accent);border-radius:0 4px 4px 0;
+}
+.content blockquote p{margin:.4rem 0}
+.content blockquote p:first-child{margin-top:0}
+.content blockquote p:last-child{margin-bottom:0}
+.content blockquote strong{color:var(--accent-deep)}
+
+/* ---- divider ---- */
+.content hr{
+  border:none;height:1px;background:var(--rule);
+  margin:2.8rem 0;position:relative;overflow:visible;
+}
+.content hr::after{
+  content:"\25C6";position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);background:var(--sheet);
+  padding:0 .7rem;color:var(--accent);font-size:.62rem;opacity:.7;
+}
+
+/* ---- tables ---- */
+.table-wrap{overflow-x:auto;margin:1.4rem 0;-webkit-overflow-scrolling:touch}
+.content table{width:100%;border-collapse:collapse;font-size:.92rem;line-height:1.5}
+.content thead th{
+  background:var(--tint);text-align:left;font-weight:600;color:var(--ink);
+  padding:.6rem .8rem;border-bottom:2px solid var(--border);
+  font-family:"IBM Plex Sans",sans-serif;white-space:nowrap;
+}
+.content tbody td{padding:.55rem .8rem;border-bottom:1px solid var(--rule);
+  vertical-align:top}
+.content tbody tr:last-child td{border-bottom:none}
+.content tbody tr:nth-child(even){background:#FAFBFC}
+
+/* ---- KaTeX tweaks ---- */
+.katex-display{margin:1.1rem 0;overflow-x:auto;overflow-y:hidden;padding:.2rem 0}
+.katex{font-size:1.02em}
+
+/* ---- figures ---- */
+.fig{margin:2rem 0}
+.fig>svg{display:block;max-width:100%;height:auto;margin:0 auto}
+.fig figcaption{font-size:.86rem;color:var(--ink-soft);line-height:1.55;
+  margin:.85rem auto 0;max-width:60ch;text-align:left;
+  padding-left:.9rem;border-left:2px solid var(--accent)}
+.fig-grid{display:grid;gap:.9rem;margin-bottom:.1rem}
+.fig-grid--2{grid-template-columns:repeat(2,1fr)}
+.fig-grid--3{grid-template-columns:repeat(3,1fr)}
+.fig-grid--4{grid-template-columns:repeat(2,1fr)}
+.fig-cell{background:#FCFDFE;border:1px solid var(--border);border-radius:6px;
+  padding:.5rem .5rem .35rem}
+.fig-cell svg{display:block;width:100%;height:auto}
+.fig-cell__label{font-family:"IBM Plex Mono",monospace;font-size:.72rem;
+  color:var(--ink-soft);text-align:center;margin-top:.2rem;line-height:1.3}
+@media(max-width:620px){.fig-grid--3,.fig-grid--4{grid-template-columns:1fr 1fr}}
+@media(max-width:430px){.fig-grid--2,.fig-grid--3,.fig-grid--4{grid-template-columns:1fr}}
+
+/* ---- to top ---- */
+.totop{
+  position:fixed;right:1.2rem;bottom:1.2rem;z-index:40;
+  width:2.6rem;height:2.6rem;border-radius:50%;display:grid;place-items:center;
+  background:var(--ink);color:#fff;text-decoration:none;font-size:1.1rem;
+  box-shadow:0 6px 18px -6px rgba(27,39,51,.5);
+  opacity:0;pointer-events:none;transition:opacity .25s,background .2s;
+}
+.totop.show{opacity:1;pointer-events:auto}
+.totop:hover{background:var(--accent)}
+
+/* ================= INDEX ================= */
+.hero{max-width:var(--maxw);margin:0 auto;
+  padding:clamp(3.5rem,12vw,7rem) clamp(1.2rem,5vw,2rem) clamp(1.4rem,5vw,2.2rem)}
+.hero__eyebrow{font-family:"IBM Plex Mono",monospace;font-size:.78rem;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--ink-faint);margin:0 0 1.1rem}
+.hero__title{font-family:"IBM Plex Serif",Georgia,serif;font-weight:600;
+  font-size:clamp(2.4rem,8vw,3.9rem);line-height:1.06;letter-spacing:-.02em;
+  margin:0;color:var(--ink)}
+.hero__title span{color:var(--accent)}
+.hero__lede{margin:1.4rem 0 0;max-width:48ch;font-size:1.08rem;color:var(--ink-soft)}
+
+.cards{max-width:var(--maxw);margin:0 auto;
+  padding:1.2rem clamp(1.2rem,5vw,2rem) 1rem;display:grid;gap:1.1rem}
+.card{display:flex;gap:clamp(1rem,3vw,1.6rem);
+  padding:clamp(1.3rem,4vw,1.9rem);background:var(--sheet);
+  border:1px solid var(--border);border-radius:6px;text-decoration:none;color:inherit;
+  box-shadow:0 1px 2px rgba(27,39,51,.03);
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+.card:hover{transform:translateY(-3px);border-color:#C9D2DA;
+  box-shadow:0 1px 2px rgba(27,39,51,.04),0 16px 34px -22px rgba(27,39,51,.4)}
+.card__num{flex-shrink:0;font-family:"IBM Plex Mono",monospace;font-weight:500;
+  font-size:1.02rem;color:var(--accent);padding-top:.2rem;white-space:nowrap}
+.card__body{display:flex;flex-direction:column;align-items:flex-start;min-width:0}
+.card__title{display:block;font-family:"IBM Plex Serif",Georgia,serif;font-weight:600;
+  font-size:clamp(1.3rem,3vw,1.45rem);margin:0 0 .35rem;color:var(--ink)}
+.card__desc{display:block;margin:0 0 .9rem;color:var(--ink-soft);font-size:.97rem}
+.card__cta{display:inline-block;font-family:"IBM Plex Mono",monospace;
+  font-size:.85rem;color:var(--accent);transition:transform .18s ease}
+.card:hover .card__cta{transform:translateX(3px)}
+
+.foot{max-width:var(--maxw);margin:0 auto;
+  padding:1.6rem clamp(1.2rem,5vw,2rem) 3rem;border-top:1px solid var(--border);
+  font-family:"IBM Plex Mono",monospace;font-size:.76rem;color:var(--ink-faint)}
+
+/* ---- entrance ---- */
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.hero,.card{animation:rise .55s ease both}
+.card:nth-child(2){animation-delay:.07s}
+
+/* ---- responsive ---- */
+@media (max-width:560px){
+  .card{flex-direction:column;gap:.5rem}
+  .card__num{padding-top:0}
+}
+
+/* ---- print ---- */
+@media print{
+  body{background:#fff}
+  .topbar,.totop{display:none}
+  .sheet{box-shadow:none;border:none;margin:0;max-width:none;padding:0}
+  .content{max-width:none}
+  .content a{color:var(--ink);border-bottom:none}
+  .content blockquote{background:#f6f6f6}
+  .content h2{break-after:avoid}
+  .table-wrap,.katex-display{break-inside:avoid}
+  .fig,.fig-cell{break-inside:avoid}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body class="page-doc">
+<header class="topbar">
+  <a class="topbar__back" href="index.html">&larr; Vypracované otázky</a>
+  <span class="topbar__tag">Otázky 09 – 10</span>
+</header>
+<main class="sheet"><article class="content">
+<h1>Otázky 9 a 10 — Opce</h1>
+<blockquote>
+<p><strong>Zadání 9 (Opce I):</strong> Stručná charakteristika derivátů. Podrobnější charakteristika opcí a základních pozic. Modely oceňování opcí, ukázka principů odvození modelů. Kombinované opční strategie.</p>
+<p><strong>Zadání 10 (Opce II):</strong> Stručná charakteristika derivátů. Podrobnější charakteristika opcí a základních pozic. Vnitřní a časová hodnota opce. Meze opční ceny a způsoby jejich odvození. Citlivost opcí a způsob jejich využití při zajištění.</p>
+</blockquote>
+<p><strong>Navigace — co k jaké otázce:</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Část</th>
+<th>Obsah</th>
+<th style="text-align: center;">Otázka 9</th>
+<th style="text-align: center;">Otázka 10</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>A</strong></td>
+<td>charakteristika derivátů, opcí a základních pozic</td>
+<td style="text-align: center;">✔</td>
+<td style="text-align: center;">✔</td>
+</tr>
+<tr>
+<td><strong>B</strong></td>
+<td>modely oceňování opcí + odvození, kombinované strategie</td>
+<td style="text-align: center;">✔</td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td><strong>C</strong></td>
+<td>vnitřní a časová hodnota, meze ceny, citlivost (greeks) a zajištění</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">✔</td>
+</tr>
+</tbody>
+</table></div>
+<hr>
+<h1>ČÁST A — Společný základ (otázka 9 i 10)</h1>
+<h2>A1. Stručná charakteristika derivátů</h2>
+<p><strong>Derivát</strong> je finanční instrument, jehož hodnota je <strong>odvozena od hodnoty podkladového aktiva</strong> (<em>underlying</em>) — akcie, index, měna, úroková míra, komodita, dluhopis.</p>
+<p>Společné rysy: hodnota se odvíjí od ceny podkladu, jde o <strong>termínový obchod</strong> (sjednání dnes, plnění v budoucnu), umožňují <strong>finanční páku</strong> a slouží k <strong>zajištění (hedging)</strong>, <strong>spekulaci</strong> a <strong>arbitráži</strong>.</p>
+<p><strong>Klasifikace finančních derivátů:</strong></p>
+<ol>
+<li><strong>Nepodmíněné termínované kontrakty</strong> — obě strany mají <em>povinnost</em> plnit:
+   - <strong>Forwardy</strong> (FRA, měnový, akciový, komoditní)
+   - <strong>Futures</strong> (úrokové, měnové, akciové, komoditní, na akciový index)</li>
+<li><strong>Opční kontrakty</strong> — držitel má <em>právo</em> (ne povinnost):
+   - <strong>Opce</strong> (na akcie, indexy, měnu, úroky, futures)
+   - <strong>Jiné opční instrumenty</strong> (opční listy, Cap, Floor, Collar)</li>
+<li><strong>Swapové kontrakty</strong> — úrokové, měnové, komoditní, na cenné papíry</li>
+</ol>
+<blockquote>
+<p><strong>Klíčové odlišení:</strong> u <strong>opce</strong> má držitel <em>právo</em> plnit (může, ale nemusí), u <strong>forwardu/futures</strong> <em>povinnost</em>. Opce jsou tedy <strong>podmíněný</strong> termínovaný kontrakt — plnění závisí na rozhodnutí držitele.</p>
+</blockquote>
+<h2>A2. Podrobnější charakteristika opcí</h2>
+<p><strong>Opce</strong> je cenný papír, který dává držiteli <strong>právo (nikoliv povinnost)</strong> prodat nebo koupit podkladový instrument v dohodnutém čase a za dohodnutou cenu (<strong>realizační / strike cena</strong> $K$).</p>
+<ul>
+<li><strong>Expirace (expiration date):</strong> třetí sobota v měsíci pro opce <strong>amerického</strong> typu; pátek před třetí sobotou pro opce <strong>evropského</strong> typu. Obchodování končí o jeden den dříve.</li>
+<li>Jeden opční kontrakt je obvykle na <strong>100 podkladových aktiv</strong>.</li>
+<li><strong>Vyrovnání:</strong> dle konkrétní opce; v USA u opcí na akcie obvykle <strong>fyzické</strong>, u opcí na indexy <strong>finanční</strong>.</li>
+</ul>
+<h3>Základní dělení opcí</h3>
+<p><strong>Dle práva:</strong>
+- <strong>Call (kupní) opce</strong> — právo <em>koupit</em> podkladové aktivum.
+- <strong>Put (prodejní) opce</strong> — právo <em>prodat</em> podkladové aktivum.</p>
+<p><strong>Dle možnosti realizace:</strong>
+- <strong>Americká opce</strong> — lze uplatnit <em>kdykoliv</em> od vypsání do expirace.
+- <strong>Evropská opce</strong> — lze uplatnit <em>pouze</em> v době expirace.</p>
+<p><strong>Dle způsobu obchodování:</strong>
+- <strong>Burzovní opce</strong> — standardizované, velmi malá pravděpodobnost nedodržení závazku.
+- <strong>OTC opce</strong> — šité na míru zákazníkovi, vyšší riziko nedodržení závazku, podstatně nižší likvidita.</p>
+<p><strong>Dle pozice investora:</strong>
+- <strong>Long (kupující)</strong> — má <em>právo</em> opci využít.
+- <strong>Short (prodávající / vypisovatel)</strong> — má <em>povinnost</em> na žádost kupujícího prodat/koupit podklad za realizační cenu.</p>
+<p><strong>Dle podkladového aktiva:</strong> akciové, měnové, indexové, na futures, úrokové.</p>
+<p><strong>Zvláštní opce:</strong>
+- <strong>LEAPS</strong> (Long-Term Equity Anticipation Securities) — dlouhodobé opce s expirací v řádu několika let.
+- <strong>Exotické opce</strong> (oproti klasickým <em>vanilla</em>): obchodované většinou OTC, např. <strong>bariérové</strong> (aktivace/deaktivace dle pohybu podkladu) nebo <strong>asijské</strong> (cena závisí na <em>průměru</em> hodnoty podkladu během života opce).</p>
+<h2>A3. Základní pozice v opčním obchodě</h2>
+<p>Existují čtyři základní pozice. Kupující platí <strong>opční prémii</strong> (premium), vypisovatel ji inkasuje.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Pozice</th>
+<th>Právo / povinnost</th>
+<th>Prémie</th>
+<th>Payoff v čase $T$</th>
+<th>Max. zisk</th>
+<th>Max. ztráta</th>
+<th>Očekávání</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Long call (LC)</strong></td>
+<td>právo koupit za $K$</td>
+<td>platí $C$</td>
+<td>$\max(0,\,S_T-K)$</td>
+<td>neomezený</td>
+<td>prémie $C$</td>
+<td>růst</td>
+</tr>
+<tr>
+<td><strong>Short call (SC)</strong></td>
+<td>povinnost prodat za $K$</td>
+<td>inkasuje $C$</td>
+<td>$-\max(0,\,S_T-K)$</td>
+<td>prémie $C$</td>
+<td>neomezená</td>
+<td>pokles / stagnace</td>
+</tr>
+<tr>
+<td><strong>Long put (LP)</strong></td>
+<td>právo prodat za $K$</td>
+<td>platí $P$</td>
+<td>$\max(0,\,K-S_T)$</td>
+<td>$K-P$</td>
+<td>prémie $P$</td>
+<td>pokles</td>
+</tr>
+<tr>
+<td><strong>Short put (SP)</strong></td>
+<td>povinnost koupit za $K$</td>
+<td>inkasuje $P$</td>
+<td>$-\max(0,\,K-S_T)$</td>
+<td>prémie $P$</td>
+<td>$K-P$</td>
+<td>růst / stagnace</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li><strong>Long call</strong> a <strong>long put</strong> jsou „zrcadlové" k <strong>short call</strong> a <strong>short put</strong>.</li>
+<li>Kupující opce má <strong>omezenou ztrátu</strong> (max. prémie) a (u call) neomezený zisk → asymetrické výplaty jsou hlavní výhodou opcí oproti forwardům.</li>
+<li>Vypisovatel (short) má <strong>omezený zisk</strong> (prémie) a velkou potenciální ztrátu — proto inkasuje prémii jako kompenzaci.</li>
+</ul>
+<blockquote>
+<p><strong>Úkol z přednášky:</strong> nakreslit pro každou pozici graf zisku/ztráty v závislosti na $S_T$. Typický tvar: LC roste od $-C$ doprava (zlom v $K$); LP klesá zleva, plochý za $K$; short pozice jsou zrcadlově převrácené podle vodorovné osy.</p>
+</blockquote>
+<hr>
+<figure class="fig"><div class="fig-grid fig-grid--4"><div class="fig-cell"><svg viewBox="0 0 300 210" xmlns="http://www.w3.org/2000/svg" role="img"><line x1="38.0" y1="93.0" x2="288.0" y2="93.0" stroke="#8593A0" stroke-width="1.3" stroke-linecap="round"/><polygon points="288.0,93.0 281.5,96.6 281.5,89.4" fill="#8593A0" fill-opacity="1.0" stroke="none" stroke-width="0"/><line x1="40.0" y1="170.0" x2="40.0" y2="6.0" stroke="#8593A0" stroke-width="1.3" stroke-linecap="round"/><polygon points="40.0,6.0 43.6,12.5 36.4,12.5" fill="#8593A0" fill-opacity="1.0" stroke="none" stroke-width="0"/><text x="290.0" y="97.0" text-anchor="start" font-size="11.5" fill="#52626F" font-family="'IBM Plex Sans',sans-serif" font-weight="400"></text><text x="40.0" y="1.0" text-anchor="start" font-size="11.5" fill="#52626F" font-family="'IBM Plex Sans',sans-serif" font-weight="400"></text><line x1="158.0" y1="15.0" x2="158.0" y2="171.0" stroke="#BC2B2B" stroke-width="1" stroke-linecap="round" stroke-dasharray="3 3"/><text x="158.0" y="186.0" text-anchor="middle" font-size="10.5" fill="#BC2B2B" font-family="'IBM Plex Mono',monospace" font-weight="500">K</text><line x1="40.0" y1="113.5" x2="276.0" y2="113.5" stroke="#8593A0" stroke-width="1" stroke-linecap="round" stroke-dasharray="2 3"/><polyline points="40.0,113.5 44.7,113.5 49.4,113.5 54.2,113.5 58.9,113.5 63.6,113.5 68.3,113.5 73.0,113.5 77.8,113.5 82.5,113.5 87.2,113.5 91.9,113.5 96.6,113.5 101.4,113.5 106.1,113.5 110.8,113.5 115.5,113.5 120.2,113.5 125.0,113.5 129.7,113.5 134.4,113.5 139.1,113.5 143.8,113.5 148.6,113.5 153.3,113.5 158.0,113.5 162.7,110.0 167.4,106.6 172.2,103.2 176.9,99.8 181.6,96.4 186.3,93.0 191.0,89.6 195.8,86.2 200.5,82.8 205.2,79.4 209.9,76.0 214.6,72.5 219.4,69.1 224.1,65.7 228.8,62.3 233.5,58.9 238.2,55.5 243.0,52.1 247.7,48.7 252.4,45.3 257.1,41.9 261.8,38.5 266.6,35.0 271.3,31.6 276.0,28.2" fill="none" stroke="#1B2733" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><circle cx="186.3" cy="93.0" r="2.8" fill="#BC2B2B"/></svg><div class="fig-cell__label">Long call — právo koupit</div></div><div class="fig-cell"><svg viewBox="0 0 300 210" xmlns="http://www.w3.org/2000/svg" role="img"><line x1="38.0" y1="93.0" x2="288.0" y2="93.0" stroke="#8593A0" stroke-width="1.3" stroke-linecap="round"/><polygon points="288.0,93.0 281.5,96.6 281.5,89.4" fill="#8593A0" fill-opacity="1.0" stroke="none" stroke-width="0"/><line x1="40.0" y1="170.0" x2="40.0" y2="6.0" stroke="#8593A0" stroke-width="1.3" stroke-linecap="round"/><polygon points="40.0,6.0 43.6,12.5 36.4,12.5" fill="#8593A0" fill-opacity="1.0" stroke="none" stroke-width="0"/><text x="290.0" y="97.0" text-anchor="start" font-size="11.5" fill="#52626F" font-family="'IBM Plex Sans',sans-serif" font-weight="400"></text><text x="40.0" y="1.0" text-anchor="start" font-size="11.5" fill="#52626F" font-family="'IBM Plex Sans',sans-serif" font-weight="400"></text><line x1="158.0" y1="15.0" x2="158.0" y2="171.0" stroke="#BC2B2B" stroke-width="1" stroke-linecap="round" stroke-dasharray="3 3"/><text x="158.0" y="186.0" text-anchor="middle" font-size="10.5" fill="#BC2B2B" font-family="'IBM Plex Mono',monospace" font-weight="500">K</text><line x1="40.0" y1="72.5" x2="276.0" y2="72.5" stroke="#8593A0" stroke-width="1" stroke-linecap="round" stroke-dasharray="2 3"/><polyline points="40.0,72.5 44.7,72.5 49.4,72.5 54.2,72.5 58.9,72.5 63.6,72.5 68.3,72.5 73.0,72.5 77.8,72.5 82.5,72.5 87.2,72.5 91.9,72.5 96.6,72.5 101.4,72.5 106.1,72.5 110.8,72.5 115.5,72.5 120.2,72.5 125.0,72.5 129.7,72.5 134.4,72.5 139.1,72.5 143.8,72.5 148.6,72.5 153.3,72.5 158.0,72.5 162.7,76.0 167.4,79.4 172.2,82.8 176.9,86.2 181.6,89.6 186.3,93.0 191.0,96.4 195.8,99.8 200.5,103.2 205.2,106.6 209.9,110.0 214.6,113.5 219.4,116.9 224.1,120.3 228.8,123.7 233.5,127.1 238.2,130.5 243.0,133.9 247.7,137.3 252.4,140.7 257.1,144.1 261.8,147.5 266.6,151.0 271.3,154.4 276.0,157.8" fill="none" stroke="#BC2B2B" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><circle cx="186.3" cy="93.0" r="2.8" fill="#BC2B2B"/></svg><div class="fig-cell__label">Short call — povinnost prodat</div></div><div class="fig-cell"><svg viewBox="0 0 300 210" xmlns="http://www.w3.org/2000/svg" role="img"><line x1="38.0" y1="93.0" x2="288.0" y2="93.0" stroke="#8593A0" stroke-width="1.3" stroke-linecap="round"/><polygon points="288.0,93.0 281.5,96.6 281.5,89.4" fill="#8593A0" fill-opacity="1.0" stroke="none" stroke-width="0"/><line x1="40.0" y1="170.0" x2="40.0" y2="6.0" stroke="#8593A0" stroke-width="1.3" stroke-linecap="round"/><polygon points="40.0,6.0 43.6,12.5 36.4,12.5" fill="#8593A0" fill-opacity="1.0" stroke="none" stroke-width="0"/><text x="290.0" y="97.0" text-anchor="start" font-size="11.5" fill="#52626F" font-family="'IBM Plex Sans',sans-serif" font-weight="400"></text><text x="40.0" y="1.0" text-anchor="start" font-size="11.5" fill="#52626F" font-family="'IBM Plex Sans',sans-serif" font-weight="400"></text><line x1="158.0" y1="15.0" x2="158.0" y2="171.0" stroke="#BC2B2B" stroke-width="1" stroke-linecap="round" stroke-dasharray="3 3"/><text x="158.0" y="186.0" text-anchor="middle" font-size="10.5" fill="#BC2B2B" font-family="'IBM Plex Mono',monospace" font-weight="500">K</text><line x1="40.0" y1="113.5" x2="276.0" y2="113.5" stroke="#8593A0" stroke-width="1" stroke-linecap="round" stroke-dasharray="2 3"/><polyline points="40.0,28.2 44.7,31.6 49.4,35.0 54.2,38.5 58.9,41.9 63.6,45.3 68.3,48.7 73.0,52.1 77.8,55.5 82.5,58.9 87.2,62.3 91.9,65.7 96.6,69.1 101.4,72.5 106.1,76.0 110.8,79.4 115.5,82.8 120.2,86.2 125.0,89.6 129.7,93.0 134.4,96.4 139.1,99.8 143.8,103.2 148.6,106.6 153.3,110.0 158.0,113.5 162.7,113.5 167.4,113.5 172.2,113.5 176.9,113.5 181.6,113.5 186.3,113.5 191.0,113.5 195.8,113.5 200.5,113.5 205.2,113.5 209.9,113.5 214.6,113.5 219.4,113.5 224.1,113.5 228.8,113.5 233.5,113.5 238.2,113.5 243.0,113.5 247.7,113.5 252.4,113.5 257.1,113.5 261.8,113.5 266.6,113.5 271.3,113.5 276.0,113.5" fill="none" stroke="#1B2733" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><circle cx="129.7" cy="93.0" r="2.8" fill="#BC2B2B"/></svg><div class="fig-cell__label">Long put — právo prodat</div></div><div class="fig-cell"><svg viewBox="0 0 300 210" xmlns="http://www.w3.org/2000/svg" role="img"><line x1="38.0" y1="93.0" x2="288.0" y2="93.0" stroke="#8593A0" stroke-width="1.3" stroke-linecap="round"/><polygon points="288.0,93.0 281.5,96.6 281.5,89.4" fill="#8593A0" fill-opacity="1.0" stroke="none" stroke-width="0"/><line x1="40.0" y1="170.0" x2="40.0" y2="6.0" stroke="#8593A0" stroke-width="1.3" stroke-linecap="round"/><polygon points="40.0,6.0 43.6,12.5 36.4,12.5" fill="#8593A0" fill-opacity="1.0" stroke="none" stroke-width="0"/><text x="290.0" y="97.0" text-anchor="start" font-size="11.5" fill="#52626F" font-family="'IBM Plex Sans',sans-serif" font-weight="400"></text><text x="40.0" y="1.0" text-anchor="start" font-size="11.5" fill="#52626F" font-family="'IBM Plex Sans',sans-serif" font-weight="400"></text><line x1="158.0" y1="15.0" x2="158.0" y2="171.0" stroke="#BC2B2B" stroke-width="1" stroke-linecap="round" stroke-dasharray="3 3"/><text x="158.0" y="186.0" text-anchor="middle" font-size="10.5" fill="#BC2B2B" font-family="'IBM Plex Mono',monospace" font-weight="500">K</text><line x1="40.0" y1="72.5" x2="276.0" y2="72.5" stroke="#8593A0" stroke-width="1" stroke-linecap="round" stroke-dasharray="2 3"/><polyline points="40.0,157.8 44.7,154.4 49.4,151.0 54.2,147.5 58.9,144.1 63.6,140.7 68.3,137.3 73.0,133.9 77.8,130.5 82.5,127.1 87.2,123.7 91.9,120.3 96.6,116.9 101.4,113.5 106.1,110.0 110.8,106.6 115.5,103.2 120.2,99.8 125.0,96.4 129.7,93.0 134.4,89.6 139.1,86.2 143.8,82.8 148.6,79.4 153.3,76.0 158.0,72.5 162.7,72.5 167.4,72.5 172.2,72.5 176.9,72.5 181.6,72.5 186.3,72.5 191.0,72.5 195.8,72.5 200.5,72.5 205.2,72.5 209.9,72.5 214.6,72.5 219.4,72.5 224.1,72.5 228.8,72.5 233.5,72.5 238.2,72.5 243.0,72.5 247.7,72.5 252.4,72.5 257.1,72.5 261.8,72.5 266.6,72.5 271.3,72.5 276.0,72.5" fill="none" stroke="#BC2B2B" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><circle cx="129.7" cy="93.0" r="2.8" fill="#BC2B2B"/></svg><div class="fig-cell__label">Short put — povinnost koupit</div></div></div><figcaption>Zisk čtyř základních pozic podle ceny podkladu v expiraci (včetně prémie). Černě koupené pozice (omezená ztráta = prémie), červeně vypsané (omezený zisk = prémie). Tečka = bod zvratu, K = realizační cena.</figcaption></figure><h1>ČÁST B — Pro otázku 9 (Opce I)</h1>
+<h2>B1. Modely oceňování opcí — přehled</h2>
+<p><strong>Cenou opce</strong> je <strong>opční prémie</strong> (placená při nákupu / získaná při prodeji). Prémie limituje <strong>maximální zisk pro vypisovatele</strong> a <strong>maximální ztrátu pro kupujícího</strong>. Skládá se ze dvou složek: <strong>vnitřní hodnoty</strong> a <strong>časové hodnoty</strong> (podrobně v části C).</p>
+<p><strong>Dělení modelů oceňování opcí:</strong></p>
+<ul>
+<li><strong>Statistické modely</strong></li>
+<li><strong>Arbitrážní modely</strong></li>
+<li><strong>Modely dílčí rovnováhy</strong> → <strong>Put-call parita</strong></li>
+<li><strong>Modely úplné rovnováhy</strong> → <strong>Black-Scholesův model</strong>, <strong>Cox-Ross-Rubinsteinův (binomický) model</strong></li>
+</ul>
+<p>Společný princip arbitrážních modelů: cena opce je taková, aby nešlo realizovat <strong>bezrizikový zisk (arbitráž)</strong> — odvozuje se porovnáním dvou ekvivalentních investičních strategií.</p>
+<blockquote>
+<p>Značení: $v$ = diskontní faktor; při spojitém úročení $v = e^{-r_f(T-t)}$, při diskrétním $v = (1+r_f)^{-(T-t)}$. $C_t$ / $P_t$ = cena call / put, $S_t$ = cena akcie, $K$ = realizační cena.</p>
+</blockquote>
+<h2>B2. Put-call parita (model dílčí rovnováhy)</h2>
+<p><strong>Předpoklady:</strong> shodný podklad, shodná doba expirace i realizační cena, evropské opce, akcie bez dividend.</p>
+<p><strong>Odvození.</strong> Porovnáme dvě strategie:</p>
+<ul>
+<li><strong>Strategie A:</strong> nákup <strong>call</strong> za $C_t$ + uložení částky $K\cdot v$.</li>
+<li><strong>Strategie B:</strong> nákup <strong>put</strong> za $P_t$ + nákup <strong>akcie</strong> za $S_t$.</li>
+</ul>
+<p>Hodnota obou strategií v čase expirace $T$:</p>
+<ul>
+<li><strong>A:</strong> uložená částka naroste na $K$ + payoff call $\max(0, S_T - K)$ = $\max(S_T,\,K)$.</li>
+<li><strong>B:</strong> akcie $S_T$ + payoff put $\max(0, K - S_T)$ = $\max(S_T,\,K)$.</li>
+</ul>
+<p>Obě strategie mají <strong>identickou výplatu</strong> $\max(S_T, K)$ → musí mít stejnou cenu dnes:</p>
+<p>$$C_t + K\cdot v = P_t + S_t$$</p>
+<p>Odtud <strong>put-call parita</strong>:</p>
+<p>$$\boxed{\,P_t = C_t + K\cdot v - S_t\,}$$</p>
+<p><strong>Význam:</strong> zná-li se cena jedné opce (call), je cena druhé (put) jednoznačně určena — a naopak. Porušení parity umožní arbitráž.</p>
+<h3>Put-call parita amerických opcí</h3>
+<p>Protože platí $P_t^A \ge P_t^E$ a $C_t^A = C_t^E$ (viz část C), pro americké opce platí pouze nerovnost:</p>
+<p>$$P_t^A \ge C_t^A + K\cdot v - S_t$$</p>
+<h2>B3. Cox-Ross-Rubinsteinův (binomický) model — 1979</h2>
+<p><strong>Předpoklady:</strong> dokonalé trhy (bez transakčních nákladů a daní, neomezené obchodování i short selling, dělitelná aktiva, jediná bezriziková sazba pro půjčování i ukládání, bez dividend), <strong>diskrétní</strong> vývoj cen, účastníci využívají každou arbitráž.</p>
+<h3>B3.1 Jednoperiodický model</h3>
+<p>Cena podkladu v čase $T-1$ je $S$. V čase $T$ buď vzroste na $uS$ (s pravděpodobností $q$), nebo klesne na $dS$ (s pravděpodobností $1-q$). Pro bezarbitrážnost musí platit $d &lt; 1 + r_f &lt; u$.</p>
+<p>Koncové hodnoty opce: $\;C_u = \max(0, uS - K)$, $\;C_d = \max(0, dS - K)$.</p>
+<p><strong>Odvození ceny replikací.</strong> V čase $T-1$ koupíme $h$ akcií za $S$ a část prostředků $B$ si vypůjčíme. Neznámé $h$ a $B$ určíme tak, aby portfolio v čase $T$ přesně <strong>replikovalo</strong> výplatu opce:</p>
+<p>$$uS\cdot h + B(1+r_f) = C_u$$</p>
+<p>$$dS\cdot h + B(1+r_f) = C_d$$</p>
+<p>Odečtením rovnic získáme <strong>zajišťovací poměr (hedge ratio)</strong>:</p>
+<p>$$h = \frac{C_u - C_d}{uS - dS} = \frac{C_u - C_d}{(u-d)\,S}$$</p>
+<p>a dosazením</p>
+<p>$$B = \frac{C_d\,uS - C_u\,dS}{(uS - dS)(1+r_f)}.$$</p>
+<p>Protože portfolio replikuje opci, jeho <strong>pořizovací cena = cena opce</strong>:</p>
+<p>$$C = S\cdot h + B$$</p>
+<p><strong>Rizikově neutrální (přepsaný) tvar.</strong> Výraz lze upravit na</p>
+<p>$$\boxed{\,C = p_1\frac{C_u}{1+r_f} + p_2\frac{C_d}{1+r_f}\,}, \qquad
+p_1 = \frac{(1+r_f)-d}{u-d}, \quad p_2 = \frac{u-(1+r_f)}{u-d} = 1 - p_1.$$</p>
+<ul>
+<li>Hodnoty $p_1, p_2$ se chovají jako pravděpodobnosti (sčítají se na 1, leží v $(0,1)$ díky $d&lt;1+r_f&lt;u$), ale <strong>nejsou to reálné pravděpodobnosti</strong> — jde o <strong>rizikově neutrální (syntetické) pravděpodobnosti</strong>.</li>
+<li>Cena opce = <strong>diskontovaná střední hodnota</strong> budoucích výplat při těchto pravděpodobnostech.</li>
+</ul>
+<p><strong>Příklad (Př. 2 / Př. 4).</strong> $S = 1000$, $K = 1050$, růst na $1100$ ($u=1{,}1$), pokles na $900$ ($d=0{,}9$), $r_f = 4\%$.
+- $C_u = \max(0, 1100-1050) = 50$, $C_d = \max(0, 900-1050) = 0$.
+- $p_1 = \dfrac{1{,}04 - 0{,}9}{1{,}1-0{,}9} = \dfrac{0{,}14}{0{,}2} = 0{,}7$, $\;p_2 = 0{,}3$.
+- $C = \dfrac{0{,}7\cdot 50 + 0{,}3\cdot 0}{1{,}04} = \dfrac{35}{1{,}04} \approx \mathbf{33{,}65}$ Kč.
+- $h = \dfrac{50-0}{1100-900} = 0{,}25$ → portfolio z 0,25 akcie a 1 short call je na období bezrizikové.</p>
+<h3>B3.2 Víceperiodický model</h3><figure class="fig"><svg viewBox="0 0 620 384" xmlns="http://www.w3.org/2000/svg" role="img"><line x1="108.0" y1="172.0" x2="282.0" y2="106.0" stroke="#D9DFE5" stroke-width="1.6" stroke-linecap="round"/><text x="195.0" y="136.0" text-anchor="middle" font-size="10" fill="#52626F" font-family="'IBM Plex Mono',monospace" font-weight="400">p</text><line x1="108.0" y1="172.0" x2="282.0" y2="238.0" stroke="#D9DFE5" stroke-width="1.6" stroke-linecap="round"/><text x="195.0" y="202.0" text-anchor="middle" font-size="10" fill="#52626F" font-family="'IBM Plex Mono',monospace" font-weight="400">1−p</text><line x1="318.0" y1="106.0" x2="492.0" y2="40.0" stroke="#D9DFE5" stroke-width="1.6" stroke-linecap="round"/><text x="405.0" y="70.0" text-anchor="middle" font-size="10" fill="#52626F" font-family="'IBM Plex Mono',monospace" font-weight="400">p</text><line x1="318.0" y1="106.0" x2="492.0" y2="172.0" stroke="#D9DFE5" stroke-width="1.6" stroke-linecap="round"/><text x="405.0" y="136.0" text-anchor="middle" font-size="10" fill="#52626F" font-family="'IBM Plex Mono',monospace" font-weight="400">1−p</text><line x1="318.0" y1="238.0" x2="492.0" y2="172.0" stroke="#D9DFE5" stroke-width="1.6" stroke-linecap="round"/><text x="405.0" y="202.0" text-anchor="middle" font-size="10" fill="#52626F" font-family="'IBM Plex Mono',monospace" font-weight="400">p</text><line x1="318.0" y1="238.0" x2="492.0" y2="304.0" stroke="#D9DFE5" stroke-width="1.6" stroke-linecap="round"/><text x="405.0" y="268.0" text-anchor="middle" font-size="10" fill="#52626F" font-family="'IBM Plex Mono',monospace" font-weight="400">1−p</text><circle cx="90.0" cy="172.0" r="18.0" fill="#fff" stroke="#1B2733" stroke-width="1.8"/><text x="90.0" y="176.0" text-anchor="middle" font-size="11.5" fill="#1B2733" font-family="'IBM Plex Sans',sans-serif" font-weight="600">S</text><circle cx="300.0" cy="106.0" r="18.0" fill="#fff" stroke="#1B2733" stroke-width="1.8"/><text x="300.0" y="110.0" text-anchor="middle" font-size="11.5" fill="#1B2733" font-family="'IBM Plex Sans',sans-serif" font-weight="600">uS</text><circle cx="300.0" cy="238.0" r="18.0" fill="#fff" stroke="#1B2733" stroke-width="1.8"/><text x="300.0" y="242.0" text-anchor="middle" font-size="11.5" fill="#1B2733" font-family="'IBM Plex Sans',sans-serif" font-weight="600">dS</text><circle cx="510.0" cy="40.0" r="18.0" fill="#fff" stroke="#BC2B2B" stroke-width="1.8"/><text x="510.0" y="44.0" text-anchor="middle" font-size="11.5" fill="#BC2B2B" font-family="'IBM Plex Sans',sans-serif" font-weight="600">u²S</text><circle cx="510.0" cy="172.0" r="18.0" fill="#fff" stroke="#BC2B2B" stroke-width="1.8"/><text x="510.0" y="176.0" text-anchor="middle" font-size="11.5" fill="#BC2B2B" font-family="'IBM Plex Sans',sans-serif" font-weight="600">S</text><circle cx="510.0" cy="304.0" r="18.0" fill="#fff" stroke="#BC2B2B" stroke-width="1.8"/><text x="510.0" y="308.0" text-anchor="middle" font-size="11.5" fill="#BC2B2B" font-family="'IBM Plex Sans',sans-serif" font-weight="600">d²S</text><text x="90.0" y="338.0" text-anchor="middle" font-size="11" fill="#8593A0" font-family="'IBM Plex Mono',monospace" font-weight="400">t</text><text x="300.0" y="338.0" text-anchor="middle" font-size="11" fill="#8593A0" font-family="'IBM Plex Mono',monospace" font-weight="400">t+1</text><text x="510.0" y="338.0" text-anchor="middle" font-size="11" fill="#8593A0" font-family="'IBM Plex Mono',monospace" font-weight="400">t+2</text><text x="310.0" y="368.0" text-anchor="middle" font-size="11" fill="#52626F" font-family="'IBM Plex Sans',sans-serif" font-weight="500">rekombinující strom (ud = 1)  ·  cena = diskontovaná stř. hodnota při rizikově neutrálních p</text></svg><figcaption>Dvouperiodický binomický (Cox-Ross-Rubinstein) strom. V každém kroku cena vzroste na uS, nebo klesne na dS; volba ud = 1 zajišťuje rekombinaci (prostřední stavy se setkávají).</figcaption></figure>
+<p>Aby se stavy stromu „setkávaly" (rekombinující strom), volí se $ud = 1$. Parametry:</p>
+<p>$$u = e^{\sigma\sqrt{T/n}}, \qquad d = \frac{1}{u},$$</p>
+<p>kde $\sigma$ = roční směrodatná odchylka <strong>logaritmických</strong> výnosů (historická volatilita, vždy roční!), $T$ = doba do expirace (roky), $n$ = počet dělení intervalu. (Logaritmické výnosy, protože se používá spojité úročení; vztahy plynou z podmínky konvergence k Black-Scholesovu modelu.)</p>
+<p><strong>Dvě období</strong> (tři koncové stavy $C_{uu}, C_{ud}, C_{dd}$), s $p \equiv p_1$:</p>
+<p>$$C = \frac{p^2 C_{uu} + 2p(1-p)C_{ud} + (1-p)^2 C_{dd}}{(1+r_f)^2}.$$</p>
+<p><strong>Obecně $n$ období</strong> — cena je diskontovaná střední hodnota přes binomické rozdělení koncových stavů:</p>
+<p>$$C = (1+r_f)^{-n}\sum_{j=0}^{n}\binom{n}{j}p^{j}(1-p)^{n-j}\,C_{u^{j}d^{\,n-j}}.$$</p>
+<p>Označíme-li $l$ = nejmenší počet vzestupů, při němž je opce ještě v penězích ($u^l d^{\,n-l}S &gt; K$), pak (pro $j&lt;l$ je $C=0$, pro $j\ge l$ je $C = u^j d^{n-j}S - K$):</p>
+<p>$$C = S\sum_{j=l}^{n}\binom{n}{j}\hat{p}^{\,j}(1-\hat{p})^{n-j}
+\;-\; K(1+r_f)^{-n}\sum_{j=l}^{n}\binom{n}{j}p^{j}(1-p)^{n-j},
+\qquad \hat{p} = \frac{u}{1+r_f}\,p.$$</p>
+<blockquote>
+<p>S rostoucím $n$ se odhad zpřesňuje a <strong>konverguje k Black-Scholesově ceně</strong>.</p>
+</blockquote>
+<h2>B4. Obecná arbitrážní teorie (princip odvození)</h2>
+<p>Obecnější rámec, použitelný i na jiné deriváty. Pracuje s maticí výnosů $\mathbf{D}$ (prvek $d_{ij}$ = výnos aktiva $i$ ve stavu $j$), vektorem cen $\mathbf{S}_t$ a vahami $\mathbf{w}$.</p>
+<p><strong>Definice arbitráže:</strong> portfolio $\mathbf{w}$, pro které platí $\mathbf{S}_t^{T}\mathbf{w}\le 0$ a $\mathbf{D}^{T}\mathbf{w}&gt;\mathbf 0$ (nebo $\mathbf{S}_t^{T}\mathbf{w}&lt;0$ a $\mathbf{D}^{T}\mathbf{w}\ge \mathbf 0$) — tj. nezáporné náklady a kladný výnos „zadarmo".</p>
+<p><strong>Věta (základní věta oceňování aktiv):</strong> neexistuje-li arbitráž, pak existují kladné <strong>stavové ceny</strong> $\boldsymbol{\psi} &gt; 0$ takové, že $\mathbf{S}_t = \mathbf{D}\,\boldsymbol{\psi}$.</p>
+<p><strong>Aplikace na call opci</strong> (bezrizikové aktivum, akcie, opce):</p>
+<p>$$\begin{bmatrix}1\\ S\\ C\end{bmatrix} =
+\begin{bmatrix} 1+r &amp; 1+r \\ uS &amp; dS \\ C_u &amp; C_d \end{bmatrix}
+\begin{bmatrix}\psi_1\\ \psi_2\end{bmatrix}.$$</p>
+<p>Z prvního řádku $1 = (1+r)(\psi_1+\psi_2)$. Označíme $p_i = (1+r)\psi_i$ → $0&lt;p_i\le 1$, $\sum p_i = 1$. Tyto <strong>rizikově neutrální pravděpodobnosti</strong> dají stejný vztah jako binomický model:</p>
+<p>$$p_1 = \frac{(1+r)-d}{u-d}, \quad p_2 = 1-p_1, \qquad C = p_1\frac{C_u}{1+r} + p_2\frac{C_d}{1+r}.$$</p>
+<p>→ <strong>Stejný výsledek</strong> jako replikace — potvrzuje konzistenci přístupů. Cena = střední hodnota diskontovaných budoucích stavů.</p>
+<h2>B5. Black-Scholesův model (model úplné rovnováhy)</h2>
+<p>Spojitý model — <strong>limitní případ</strong> binomického modelu pro $n\to\infty$. <strong>Předpoklady:</strong> lognormální vývoj ceny akcie, konstantní $r_f$ a volatilita $\sigma$, evropská opce, bez dividend, bez transakčních nákladů, spojité obchodování.</p>
+<p>Cena evropské <strong>call</strong> opce:</p>
+<p>$$C_t = S_t\,\Phi(d_1) - K\,e^{-r_f(T-t)}\,\Phi(d_2),$$</p>
+<p>$$d_1 = \frac{\ln(S_t/K) + \left(r_f + \tfrac{1}{2}\sigma^2\right)(T-t)}{\sigma\sqrt{T-t}}, \qquad d_2 = d_1 - \sigma\sqrt{T-t},$$</p>
+<p>kde $\Phi(\cdot)$ je distribuční funkce standardního normálního rozdělení. Cenu <strong>put</strong> opce dopočítáme z <strong>put-call parity</strong>:</p>
+<p>$$P_t = K\,e^{-r_f(T-t)}\,\Phi(-d_2) - S_t\,\Phi(-d_1).$$</p>
+<blockquote>
+<p><strong>Princip odvození</strong> (idea): sestavením dynamicky zajišťovaného (delta-neutrálního) bezrizikového portfolia akcie + opce a požadavkem, aby vynášelo bezrizikovou míru, vznikne Black-Scholesova parciální diferenciální rovnice, jejíž řešení je výše uvedený vzorec. Je to spojitá obdoba replikace z binomického modelu.</p>
+</blockquote>
+<h2>B6. Kombinované opční strategie</h2>
+<p>Kombinací základních pozic vznikají strategie s cíleným výplatním profilem.</p>
+<p><strong>Syntetické pozice</strong>
+- <strong>Syntetický nákup akcie (synthetic long stock):</strong> <em>long call + short put</em> (stejné $K$ a expirace). Replikuje držbu akcie, ale s malým vkladem → <strong>pákový efekt</strong>.
+- <strong>Syntetický prodej akcie (synthetic short stock):</strong> <em>long put + short call</em> (stejné $K$ a expirace). Opět vysoká páka.</p>
+<p><strong>Sázky na (ne)pohyb — straddle a strangle</strong>
+- <strong>Long straddle:</strong> <em>long call + long put</em> (stejné $K$). Zisk při <strong>velkém pohybu</strong> (nahoru i dolů), ztráta při <strong>stabilní</strong> ceně.
+- <strong>Short straddle:</strong> <em>short call + short put</em> (stejné $K$). Opačně — zisk při stabilní ceně, ztráta při velkém pohybu.
+- <strong>Long/short strangle:</strong> jako straddle, ale <strong>různé realizační ceny</strong> (call s $K$ &gt; kurz, put s $K$ &lt; kurz). Oproti straddle <strong>menší možná ztráta</strong> (i menší zisk).</p>
+<p><strong>Spready</strong> (kombinace long + short pozice <strong>stejného typu</strong>)
+- <strong>Vertical spread</strong> — různé realizační ceny.
+- <strong>Horizontal spread</strong> — různá data splatnosti.
+- <strong>Diagonal spread</strong> — různé ceny i data.
+- <strong>Bull call spread:</strong> <em>long call s nižším $K$ + short call s vyšším $K$</em> → sázka na <strong>růst</strong>.
+- <strong>Bear call spread:</strong> <em>long call s vyšším $K$ + short call s nižším $K$</em> → sázka na <strong>pokles</strong>.</p>
+<p><strong>Motýlek a kondor</strong>
+- <strong>Long butterfly:</strong> 4 opce — <em>long call (put) s nejnižším a nejvyšším $K$ + 2× short call (put) se středním $K$</em>. Sázka na <strong>malý pohyb</strong>. <strong>Short butterfly</strong> (obrácené pozice) → zisk při velkém pohybu.
+- <strong>Condor:</strong> jako butterfly, ale prostřední dvě opce mají <strong>různé</strong> realizační ceny (širší „plató").</p>
+<p><strong>Strip a strap</strong> (sázka na velký pohyb s odhadem směru)
+- <strong>Strip:</strong> <em>1 long call + 2 long put</em> (stejné $K$) — velký pohyb, <strong>spíše pokles</strong>.
+- <strong>Strap:</strong> <em>2 long call + 1 long put</em> (stejné $K$) — velký pohyb, <strong>spíše růst</strong>.</p>
+<hr>
+<figure class="fig"><div class="fig-grid fig-grid--3"><div class="fig-cell"><svg viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg" role="img"><line x1="36.0" y1="93.0" x2="290.0" y2="93.0" stroke="#8593A0" stroke-width="1.3" stroke-linecap="round"/><polygon points="290.0,93.0 283.5,96.6 283.5,89.4" fill="#8593A0" fill-opacity="1.0" stroke="none" stroke-width="0"/><line x1="38.0" y1="170.0" x2="38.0" y2="6.0" stroke="#8593A0" stroke-width="1.3" stroke-linecap="round"/><polygon points="38.0,6.0 41.6,12.5 34.4,12.5" fill="#8593A0" fill-opacity="1.0" stroke="none" stroke-width="0"/><text x="292.0" y="97.0" text-anchor="start" font-size="11.5" fill="#52626F" font-family="'IBM Plex Sans',sans-serif" font-weight="400"></text><text x="38.0" y="1.0" text-anchor="start" font-size="11.5" fill="#52626F" font-family="'IBM Plex Sans',sans-serif" font-weight="400"></text><line x1="38.0" y1="93.0" x2="278.0" y2="93.0" stroke="#EAEEF2" stroke-width="1" stroke-linecap="round"/><polyline points="38.0,18.0 40.4,20.5 42.8,23.0 45.2,25.5 47.6,28.0 50.0,30.5 52.4,33.0 54.8,35.5 57.2,38.0 59.6,40.5 62.0,43.0 64.4,45.5 66.8,48.0 69.2,50.5 71.6,53.0 74.0,55.5 76.4,58.0 78.8,60.5 81.2,63.0 83.6,65.5 86.0,68.0 88.4,70.5 90.8,73.0 93.2,75.5 95.6,78.0 98.0,80.5 100.4,83.0 102.8,85.5 105.2,88.0 107.6,90.5 110.0,93.0 112.4,95.5 114.8,98.0 117.2,100.5 119.6,103.0 122.0,105.5 124.4,108.0 126.8,110.5 129.2,113.0 131.6,115.5 134.0,118.0 136.4,120.5 138.8,123.0 141.2,125.5 143.6,128.0 146.0,130.5 148.4,133.0 150.8,135.5 153.2,138.0 155.6,140.5 158.0,143.0 160.4,140.5 162.8,138.0 165.2,135.5 167.6,133.0 170.0,130.5 172.4,128.0 174.8,125.5 177.2,123.0 179.6,120.5 182.0,118.0 184.4,115.5 186.8,113.0 189.2,110.5 191.6,108.0 194.0,105.5 196.4,103.0 198.8,100.5 201.2,98.0 203.6,95.5 206.0,93.0 208.4,90.5 210.8,88.0 213.2,85.5 215.6,83.0 218.0,80.5 220.4,78.0 222.8,75.5 225.2,73.0 227.6,70.5 230.0,68.0 232.4,65.5 234.8,63.0 237.2,60.5 239.6,58.0 242.0,55.5 244.4,53.0 246.8,50.5 249.2,48.0 251.6,45.5 254.0,43.0 256.4,40.5 258.8,38.0 261.2,35.5 263.6,33.0 266.0,30.5 268.4,28.0 270.8,25.5 273.2,23.0 275.6,20.5 278.0,18.0" fill="none" stroke="#1B2733" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><circle cx="110.0" cy="93.0" r="2.6" fill="#BC2B2B"/><circle cx="206.0" cy="93.0" r="2.6" fill="#BC2B2B"/></svg><div class="fig-cell__label">Long straddle — sázka na pohyb</div></div><div class="fig-cell"><svg viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg" role="img"><line x1="36.0" y1="93.0" x2="290.0" y2="93.0" stroke="#8593A0" stroke-width="1.3" stroke-linecap="round"/><polygon points="290.0,93.0 283.5,96.6 283.5,89.4" fill="#8593A0" fill-opacity="1.0" stroke="none" stroke-width="0"/><line x1="38.0" y1="170.0" x2="38.0" y2="6.0" stroke="#8593A0" stroke-width="1.3" stroke-linecap="round"/><polygon points="38.0,6.0 41.6,12.5 34.4,12.5" fill="#8593A0" fill-opacity="1.0" stroke="none" stroke-width="0"/><text x="292.0" y="97.0" text-anchor="start" font-size="11.5" fill="#52626F" font-family="'IBM Plex Sans',sans-serif" font-weight="400"></text><text x="38.0" y="1.0" text-anchor="start" font-size="11.5" fill="#52626F" font-family="'IBM Plex Sans',sans-serif" font-weight="400"></text><line x1="38.0" y1="93.0" x2="278.0" y2="93.0" stroke="#EAEEF2" stroke-width="1" stroke-linecap="round"/><polyline points="38.0,113.0 40.4,113.0 42.8,113.0 45.2,113.0 47.6,113.0 50.0,113.0 52.4,113.0 54.8,113.0 57.2,113.0 59.6,113.0 62.0,113.0 64.4,113.0 66.8,113.0 69.2,113.0 71.6,113.0 74.0,113.0 76.4,113.0 78.8,113.0 81.2,113.0 83.6,113.0 86.0,113.0 88.4,113.0 90.8,113.0 93.2,113.0 95.6,113.0 98.0,113.0 100.4,113.0 102.8,113.0 105.2,113.0 107.6,113.0 110.0,113.0 112.4,113.0 114.8,113.0 117.2,113.0 119.6,113.0 122.0,113.0 124.4,113.0 126.8,113.0 129.2,113.0 131.6,113.0 134.0,113.0 136.4,110.5 138.8,108.0 141.2,105.5 143.6,103.0 146.0,100.5 148.4,98.0 150.8,95.5 153.2,93.0 155.6,90.5 158.0,88.0 160.4,85.5 162.8,83.0 165.2,80.5 167.6,78.0 170.0,75.5 172.4,73.0 174.8,70.5 177.2,68.0 179.6,65.5 182.0,63.0 184.4,63.0 186.8,63.0 189.2,63.0 191.6,63.0 194.0,63.0 196.4,63.0 198.8,63.0 201.2,63.0 203.6,63.0 206.0,63.0 208.4,63.0 210.8,63.0 213.2,63.0 215.6,63.0 218.0,63.0 220.4,63.0 222.8,63.0 225.2,63.0 227.6,63.0 230.0,63.0 232.4,63.0 234.8,63.0 237.2,63.0 239.6,63.0 242.0,63.0 244.4,63.0 246.8,63.0 249.2,63.0 251.6,63.0 254.0,63.0 256.4,63.0 258.8,63.0 261.2,63.0 263.6,63.0 266.0,63.0 268.4,63.0 270.8,63.0 273.2,63.0 275.6,63.0 278.0,63.0" fill="none" stroke="#1B2733" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><circle cx="153.2" cy="93.0" r="2.6" fill="#BC2B2B"/></svg><div class="fig-cell__label">Bull call spread — sázka na růst</div></div><div class="fig-cell"><svg viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg" role="img"><line x1="36.0" y1="93.0" x2="290.0" y2="93.0" stroke="#8593A0" stroke-width="1.3" stroke-linecap="round"/><polygon points="290.0,93.0 283.5,96.6 283.5,89.4" fill="#8593A0" fill-opacity="1.0" stroke="none" stroke-width="0"/><line x1="38.0" y1="170.0" x2="38.0" y2="6.0" stroke="#8593A0" stroke-width="1.3" stroke-linecap="round"/><polygon points="38.0,6.0 41.6,12.5 34.4,12.5" fill="#8593A0" fill-opacity="1.0" stroke="none" stroke-width="0"/><text x="292.0" y="97.0" text-anchor="start" font-size="11.5" fill="#52626F" font-family="'IBM Plex Sans',sans-serif" font-weight="400"></text><text x="38.0" y="1.0" text-anchor="start" font-size="11.5" fill="#52626F" font-family="'IBM Plex Sans',sans-serif" font-weight="400"></text><line x1="38.0" y1="93.0" x2="278.0" y2="93.0" stroke="#EAEEF2" stroke-width="1" stroke-linecap="round"/><polyline points="38.0,103.0 40.4,103.0 42.8,103.0 45.2,103.0 47.6,103.0 50.0,103.0 52.4,103.0 54.8,103.0 57.2,103.0 59.6,103.0 62.0,103.0 64.4,103.0 66.8,103.0 69.2,103.0 71.6,103.0 74.0,103.0 76.4,103.0 78.8,103.0 81.2,103.0 83.6,103.0 86.0,103.0 88.4,103.0 90.8,103.0 93.2,103.0 95.6,103.0 98.0,103.0 100.4,103.0 102.8,103.0 105.2,103.0 107.6,103.0 110.0,103.0 112.4,103.0 114.8,103.0 117.2,103.0 119.6,103.0 122.0,103.0 124.4,103.0 126.8,103.0 129.2,103.0 131.6,103.0 134.0,103.0 136.4,100.5 138.8,98.0 141.2,95.5 143.6,93.0 146.0,90.5 148.4,88.0 150.8,85.5 153.2,83.0 155.6,80.5 158.0,78.0 160.4,80.5 162.8,83.0 165.2,85.5 167.6,88.0 170.0,90.5 172.4,93.0 174.8,95.5 177.2,98.0 179.6,100.5 182.0,103.0 184.4,103.0 186.8,103.0 189.2,103.0 191.6,103.0 194.0,103.0 196.4,103.0 198.8,103.0 201.2,103.0 203.6,103.0 206.0,103.0 208.4,103.0 210.8,103.0 213.2,103.0 215.6,103.0 218.0,103.0 220.4,103.0 222.8,103.0 225.2,103.0 227.6,103.0 230.0,103.0 232.4,103.0 234.8,103.0 237.2,103.0 239.6,103.0 242.0,103.0 244.4,103.0 246.8,103.0 249.2,103.0 251.6,103.0 254.0,103.0 256.4,103.0 258.8,103.0 261.2,103.0 263.6,103.0 266.0,103.0 268.4,103.0 270.8,103.0 273.2,103.0 275.6,103.0 278.0,103.0" fill="none" stroke="#1B2733" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><circle cx="143.6" cy="93.0" r="2.6" fill="#BC2B2B"/><circle cx="172.4" cy="93.0" r="2.6" fill="#BC2B2B"/></svg><div class="fig-cell__label">Long butterfly — sázka na klid</div></div></div><figcaption>Tři typické kombinované strategie. Straddle vydělá při velkém pohybu kterýmkoli směrem, bull spread na omezeném růstu (zisk i ztráta zastropované), butterfly na malém pohybu kolem K.</figcaption></figure><h1>ČÁST C — Pro otázku 10 (Opce II)</h1>
+<h2>C1. Vnitřní hodnota opce (intrinsic value, IV)</h2>
+<p>Závisí na rozdílu mezi spotovou cenou akcie $S_t$ a realizační cenou $K$:</p>
+<p>$$IV_{call} = \max(0,\; S_t - K), \qquad IV_{put} = \max(0,\; K - S_t).$$</p>
+<p><strong>Moneyness (postavení vůči realizační ceně):</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Postavení</th>
+<th>Call ($IV$)</th>
+<th>Put ($IV$)</th>
+<th>Označení</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>v penězích</strong> (in the money)</td>
+<td>$S_t &gt; K \Rightarrow S_t-K$</td>
+<td>$S_t &lt; K \Rightarrow K-S_t$</td>
+<td>kladná vnitřní hodnota</td>
+</tr>
+<tr>
+<td><strong>na penězích</strong> (at the money)</td>
+<td>$S_t = K \Rightarrow 0$</td>
+<td>$S_t = K \Rightarrow 0$</td>
+<td>nulová vnitřní hodnota</td>
+</tr>
+<tr>
+<td><strong>mimo peníze</strong> (out of the money)</td>
+<td>$S_t &lt; K \Rightarrow 0$</td>
+<td>$S_t &gt; K \Rightarrow 0$</td>
+<td>nulová vnitřní hodnota</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Faktory ovlivňující vnitřní hodnotu</strong> (↗ = roste cena opce, ↘ = klesá):</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Změna</th>
+<th style="text-align: center;">Call</th>
+<th style="text-align: center;">Put</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>↑ $S_t$</td>
+<td style="text-align: center;">↗</td>
+<td style="text-align: center;">↘</td>
+</tr>
+<tr>
+<td>↓ $S_t$</td>
+<td style="text-align: center;">↘</td>
+<td style="text-align: center;">↗</td>
+</tr>
+<tr>
+<td>↑ $K$</td>
+<td style="text-align: center;">↘</td>
+<td style="text-align: center;">↗</td>
+</tr>
+<tr>
+<td>↓ $K$</td>
+<td style="text-align: center;">↗</td>
+<td style="text-align: center;">↘</td>
+</tr>
+</tbody>
+</table></div>
+<h2>C2. Časová hodnota opce (time value)</h2>
+<p>$$\text{Časová hodnota} = \text{opční prémie} - \text{vnitřní hodnota}.$$</p>
+<p>Vnitřní hodnota je <strong>exaktně daná a měřitelná</strong>, proto <strong>všechny ostatní vlivy</strong> na prémii (nabídka/poptávka, čas, volatilita…) se promítají do <strong>časové hodnoty</strong>.</p>
+<p><strong>Faktory ovlivňující časovou hodnotu</strong> (pro <em>rostoucí</em> hodnotu faktoru):</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Rostoucí faktor</th>
+<th style="text-align: center;">Call</th>
+<th style="text-align: center;">Put</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Doba do splatnosti $T$</td>
+<td style="text-align: center;">↗</td>
+<td style="text-align: center;">↗</td>
+</tr>
+<tr>
+<td>Tržní úroková míra $r_f$</td>
+<td style="text-align: center;">↗</td>
+<td style="text-align: center;">↘</td>
+</tr>
+<tr>
+<td>Volatilita podkladu $\sigma$</td>
+<td style="text-align: center;">↗</td>
+<td style="text-align: center;">↗</td>
+</tr>
+<tr>
+<td>Výše dividendy $D$</td>
+<td style="text-align: center;">↘</td>
+<td style="text-align: center;">↗</td>
+</tr>
+</tbody>
+</table></div>
+<p>Při <em>snižování</em> faktorů jsou efekty opačné. <strong>Vyšší volatilita zdražuje obě</strong> opce (větší šance na výhodný pohyb při omezené ztrátě).</p>
+<p><strong>Chování časové hodnoty:</strong>
+- Čím <strong>více mimo peníze</strong>, tím vyšší pravděpodobnost neuplatnění → časová hodnota <strong>klesá</strong> (k nule daleko OTM).
+- Čím <strong>více v penězích</strong>, tím vyšší vnitřní hodnota; opce sice pravděpodobněji skončí v penězích, ale je dražší a tím méně „výhodná" → časová hodnota opět <strong>klesá</strong>.
+- <strong>Časová hodnota je nejvyšší u opcí na penězích</strong> (at the money).</p>
+<figure class="fig"><svg viewBox="0 0 620 330" xmlns="http://www.w3.org/2000/svg" role="img"><line x1="62.0" y1="248.7" x2="546.0" y2="248.7" stroke="#8593A0" stroke-width="1.3" stroke-linecap="round"/><polygon points="546.0,248.7 539.5,252.3 539.5,245.1" fill="#8593A0" fill-opacity="1.0" stroke="none" stroke-width="0"/><line x1="64.0" y1="268.0" x2="64.0" y2="12.0" stroke="#8593A0" stroke-width="1.3" stroke-linecap="round"/><polygon points="64.0,12.0 67.6,18.5 60.4,18.5" fill="#8593A0" fill-opacity="1.0" stroke="none" stroke-width="0"/><text x="548.0" y="252.7" text-anchor="start" font-size="11.5" fill="#52626F" font-family="'IBM Plex Sans',sans-serif" font-weight="400">S</text><text x="64.0" y="7.0" text-anchor="start" font-size="11.5" fill="#52626F" font-family="'IBM Plex Sans',sans-serif" font-weight="400">cena call</text><polygon points="64.0,248.6 68.7,248.6 73.4,248.5 78.1,248.5 82.8,248.4 87.5,248.4 92.2,248.3 96.9,248.2 101.6,248.0 106.3,247.9 111.0,247.7 115.7,247.5 120.4,247.2 125.1,246.9 129.8,246.5 134.5,246.1 139.2,245.6 143.9,245.0 148.6,244.4 153.3,243.6 158.0,242.8 162.7,241.9 167.4,240.8 172.1,239.6 176.8,238.3 181.5,236.9 186.2,235.4 190.9,233.7 195.6,232.0 200.3,230.1 205.0,228.0 209.7,225.9 214.4,223.7 219.1,221.4 223.8,219.1 228.5,216.7 233.2,214.3 237.9,211.9 242.6,209.5 247.3,207.2 252.0,205.0 256.7,202.8 261.4,200.8 266.1,199.0 270.8,197.4 275.5,195.9 280.2,194.7 284.9,193.8 289.6,193.1 294.3,192.7 299.0,192.5 303.7,188.4 308.4,184.5 313.1,180.8 317.8,177.5 322.5,174.3 327.2,171.4 331.9,168.8 336.6,166.3 341.3,163.9 346.0,161.7 350.7,159.7 355.4,157.7 360.1,155.7 364.8,153.8 369.5,151.9 374.2,149.9 378.9,148.0 383.6,145.9 388.3,143.8 393.0,141.6 397.7,139.3 402.4,136.9 407.1,134.4 411.8,131.7 416.5,128.9 421.2,126.0 425.9,123.0 430.6,119.8 435.3,116.5 440.0,113.2 444.7,109.7 449.4,106.1 454.1,102.4 458.8,98.7 463.5,94.8 468.2,90.9 472.9,87.0 477.6,83.0 482.3,78.9 487.0,74.8 491.7,70.7 496.4,66.5 501.1,62.3 505.8,58.1 510.5,53.9 515.2,49.6 519.9,45.4 524.6,41.1 529.3,36.8 534.0,32.5 534.0,32.6 524.6,41.3 515.2,49.9 505.8,58.6 496.4,67.2 487.0,75.9 477.6,84.5 468.2,93.1 458.8,101.8 449.4,110.4 440.0,119.1 430.6,127.7 421.2,136.4 411.8,145.0 402.4,153.6 393.0,162.3 383.6,170.9 374.2,179.6 364.8,188.2 355.4,196.9 346.0,205.5 336.6,214.1 327.2,222.8 317.8,231.4 308.4,240.1 299.0,248.7 289.6,248.7 280.2,248.7 270.8,248.7 261.4,248.7 252.0,248.7 242.6,248.7 233.2,248.7 223.8,248.7 214.4,248.7 205.0,248.7 195.6,248.7 186.2,248.7 176.8,248.7 167.4,248.7 158.0,248.7 148.6,248.7 139.2,248.7 129.8,248.7 120.4,248.7 111.0,248.7 101.6,248.7 92.2,248.7 82.8,248.7 73.4,248.7 64.0,248.7" fill="#FBEDED" fill-opacity="1.0" stroke="none" stroke-width="0"/><line x1="299.0" y1="21.0" x2="299.0" y2="270.0" stroke="#BC2B2B" stroke-width="1" stroke-linecap="round" stroke-dasharray="4 3"/><text x="299.0" y="286.0" text-anchor="middle" font-size="11" fill="#BC2B2B" font-family="'IBM Plex Mono',monospace" font-weight="500">K</text><polyline points="64.0,248.7 73.4,248.7 82.8,248.7 92.2,248.7 101.6,248.7 111.0,248.7 120.4,248.7 129.8,248.7 139.2,248.7 148.6,248.7 158.0,248.7 167.4,248.7 176.8,248.7 186.2,248.7 195.6,248.7 205.0,248.7 214.4,248.7 223.8,248.7 233.2,248.7 242.6,248.7 252.0,248.7 261.4,248.7 270.8,248.7 280.2,248.7 289.6,248.7 299.0,248.7 308.4,240.1 317.8,231.4 327.2,222.8 336.6,214.1 346.0,205.5 355.4,196.9 364.8,188.2 374.2,179.6 383.6,170.9 393.0,162.3 402.4,153.6 411.8,145.0 421.2,136.4 430.6,127.7 440.0,119.1 449.4,110.4 458.8,101.8 468.2,93.1 477.6,84.5 487.0,75.9 496.4,67.2 505.8,58.6 515.2,49.9 524.6,41.3 534.0,32.6" fill="none" stroke="#52626F" stroke-width="2.0" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="5 4"/><polyline points="64.0,248.6 68.7,248.6 73.4,248.5 78.1,248.5 82.8,248.4 87.5,248.4 92.2,248.3 96.9,248.2 101.6,248.0 106.3,247.9 111.0,247.7 115.7,247.5 120.4,247.2 125.1,246.9 129.8,246.5 134.5,246.1 139.2,245.6 143.9,245.0 148.6,244.4 153.3,243.6 158.0,242.8 162.7,241.9 167.4,240.8 172.1,239.6 176.8,238.3 181.5,236.9 186.2,235.4 190.9,233.7 195.6,232.0 200.3,230.1 205.0,228.0 209.7,225.9 214.4,223.7 219.1,221.4 223.8,219.1 228.5,216.7 233.2,214.3 237.9,211.9 242.6,209.5 247.3,207.2 252.0,205.0 256.7,202.8 261.4,200.8 266.1,199.0 270.8,197.4 275.5,195.9 280.2,194.7 284.9,193.8 289.6,193.1 294.3,192.7 299.0,192.5 303.7,188.4 308.4,184.5 313.1,180.8 317.8,177.5 322.5,174.3 327.2,171.4 331.9,168.8 336.6,166.3 341.3,163.9 346.0,161.7 350.7,159.7 355.4,157.7 360.1,155.7 364.8,153.8 369.5,151.9 374.2,149.9 378.9,148.0 383.6,145.9 388.3,143.8 393.0,141.6 397.7,139.3 402.4,136.9 407.1,134.4 411.8,131.7 416.5,128.9 421.2,126.0 425.9,123.0 430.6,119.8 435.3,116.5 440.0,113.2 444.7,109.7 449.4,106.1 454.1,102.4 458.8,98.7 463.5,94.8 468.2,90.9 472.9,87.0 477.6,83.0 482.3,78.9 487.0,74.8 491.7,70.7 496.4,66.5 501.1,62.3 505.8,58.1 510.5,53.9 515.2,49.6 519.9,45.4 524.6,41.1 529.3,36.8 534.0,32.5" fill="none" stroke="#1B2733" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><text x="468.2" y="80.9" text-anchor="middle" font-size="11.5" fill="#1B2733" font-family="'IBM Plex Sans',sans-serif" font-weight="600">cena opce (prémie)</text><text x="440.0" y="135.1" text-anchor="middle" font-size="11.5" fill="#52626F" font-family="'IBM Plex Sans',sans-serif" font-weight="500">vnitřní hodnota</text><line x1="299.0" y1="248.7" x2="299.0" y2="192.5" stroke="#BC2B2B" stroke-width="1.4" stroke-linecap="round"/><polygon points="299.0,192.5 302.3,198.5 295.7,198.5" fill="#BC2B2B" fill-opacity="1.0" stroke="none" stroke-width="0"/><polygon points="299.0,248.7 295.7,242.7 302.3,242.7" fill="#BC2B2B" fill-opacity="1.0" stroke="none" stroke-width="0"/><text x="309.0" y="224.6" text-anchor="start" font-size="11" fill="#BC2B2B" font-family="'IBM Plex Sans',sans-serif" font-weight="600">časová hodnota</text></svg><figcaption>Prémie call opce = vnitřní hodnota (přerušovaně) + časová hodnota (vyšrafovaná mezera). Časová hodnota je <strong>nejvyšší na penězích</strong> (S ≈ K) a klesá hluboko v penězích i mimo ně.</figcaption></figure><h2>C3. Meze call opce a jejich odvození</h2>
+<p>Předpoklady: akcie <strong>bez dividend</strong>, <strong>evropská</strong> opce. Prémie call $C_t$ má vlastnosti:</p>
+<ol>
+<li><strong>$C_t \ge 0$</strong> — opce je právo, nikdy nenutí ke ztrátě.</li>
+<li><strong>$C_t \le S_t$</strong> — call nemůže být dražší než samotná akcie.</li>
+<li><strong>$C_t \ge S_t - K\cdot v$</strong> — viz odvození níže.</li>
+</ol>
+<p><strong>Odvození vlastnosti 3.</strong> Porovnáme dvě strategie:
+- <strong>Strategie A:</strong> koupíme akcii za $S_t$.
+- <strong>Strategie B:</strong> koupíme call za $C_t$ + uložíme $K\cdot v$.</p>
+<p>V čase $T$ je hodnota <strong>B</strong> $= \max(0, S_T - K) + K = \max(S_T,\,K) \ge S_T$ = hodnota <strong>A</strong>. Strategie B je tedy vždy alespoň tak dobrá → musí být alespoň tak drahá:</p>
+<p>$$S_t \le C_t + K\cdot v \quad\Rightarrow\quad C_t \ge S_t - K\cdot v.$$</p>
+<p>Souhrnně: $\;C_t \ge \max(0,\; S_t - K\cdot v)$.</p>
+<p><strong>Americká call opce:</strong> při předčasném uplatnění získá investor jen vnitřní hodnotu $S_t - K$, přitom vždy platí $C_t \ge S_t - K$. Je tedy <strong>výhodnější opci prodat než předčasně uplatnit</strong> → předčasné uplatnění nepřináší výhodu a platí $C_t^A = C_t^E$.</p>
+<h2>C4. Meze put opce a jejich odvození</h2>
+<p>Předpoklady: akcie <strong>bez dividend</strong>, <strong>evropská</strong> opce. Prémie put $P_t$ má vlastnosti:</p>
+<ol>
+<li><strong>$P_t \ge 0$</strong>.</li>
+<li><strong>$P_t \le K\cdot v$</strong> — majitel získá v expiraci maximálně $K$ (když cena akcie klesne na 0); nezaplatí proto víc než současnou hodnotu realizační ceny.</li>
+<li><strong>$P_t \ge K\cdot v - S_t$</strong> — viz odvození níže.</li>
+</ol>
+<p><strong>Odvození vlastnosti 3.</strong> Porovnáme dvě strategie:
+- <strong>Strategie A:</strong> koupíme akcii za $S_t$ + put za $P_t$.
+- <strong>Strategie B:</strong> uložíme $K\cdot v$.</p>
+<p>V čase $T$ je hodnota <strong>A</strong> $= S_T + \max(0, K - S_T) = \max(S_T,\,K) \ge K$ = hodnota <strong>B</strong>. Strategie A je vždy alespoň tak dobrá → musí být alespoň tak drahá:</p>
+<p>$$P_t + S_t \ge K\cdot v \quad\Rightarrow\quad P_t \ge K\cdot v - S_t.$$</p>
+<p>Souhrnně: $\;P_t \ge \max(0,\; K\cdot v - S_t)$.</p>
+<p><strong>Americká put opce:</strong> předčasné uplatnění <strong>může být výhodné</strong> (uplatním a uložím peníze), proto $P_t^A \ge P_t^E$. Meze:</p>
+<p>$$P_t^A \ge 0, \qquad P_t^A \le K, \qquad P_t^A \ge K - S_t.$$</p>
+<blockquote>
+<p>Meze se zohledněním dividend viz Hull &amp; Basu (2016, s. 239–241).</p>
+</blockquote>
+<figure class="fig"><div class="fig-grid fig-grid--2"><div class="fig-cell"><svg viewBox="0 0 310 250" xmlns="http://www.w3.org/2000/svg" role="img"><line x1="42.0" y1="188.0" x2="288.0" y2="188.0" stroke="#8593A0" stroke-width="1.3" stroke-linecap="round"/><polygon points="288.0,188.0 281.5,191.6 281.5,184.4" fill="#8593A0" fill-opacity="1.0" stroke="none" stroke-width="0"/><line x1="44.0" y1="190.0" x2="44.0" y2="8.0" stroke="#8593A0" stroke-width="1.3" stroke-linecap="round"/><polygon points="44.0,8.0 47.6,14.5 40.4,14.5" fill="#8593A0" fill-opacity="1.0" stroke="none" stroke-width="0"/><text x="290.0" y="192.0" text-anchor="start" font-size="11.5" fill="#52626F" font-family="'IBM Plex Sans',sans-serif" font-weight="400">S</text><text x="44.0" y="3.0" text-anchor="start" font-size="11.5" fill="#52626F" font-family="'IBM Plex Sans',sans-serif" font-weight="400">cena</text><polygon points="44.0,188.0 276.0,20.0 276.0,97.3 150.7,188.0 44.0,188.0" fill="#EAF1F7" fill-opacity="1.0" stroke="none" stroke-width="0"/><polyline points="44.0,188.0 276.0,20.0" fill="none" stroke="#52626F" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/><polyline points="44.0,188.0 150.7,188.0 276.0,97.3" fill="none" stroke="#BC2B2B" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><line x1="150.7" y1="188.0" x2="150.7" y2="180.0" stroke="#BC2B2B" stroke-width="1.2" stroke-linecap="round"/><text x="150.7" y="206.0" text-anchor="middle" font-size="10.5" fill="#BC2B2B" font-family="'IBM Plex Mono',monospace" font-weight="500">K·v</text><text x="211.0" y="43.5" text-anchor="middle" font-size="10.5" fill="#52626F" font-family="'IBM Plex Sans',sans-serif" font-weight="500">C ≤ S</text><text x="243.5" y="120.8" text-anchor="middle" font-size="10.5" fill="#BC2B2B" font-family="'IBM Plex Sans',sans-serif" font-weight="600">C ≥ S−K·v</text></svg><div class="fig-cell__label">Call opce</div></div><div class="fig-cell"><svg viewBox="0 0 310 250" xmlns="http://www.w3.org/2000/svg" role="img"><line x1="42.0" y1="188.0" x2="288.0" y2="188.0" stroke="#8593A0" stroke-width="1.3" stroke-linecap="round"/><polygon points="288.0,188.0 281.5,191.6 281.5,184.4" fill="#8593A0" fill-opacity="1.0" stroke="none" stroke-width="0"/><line x1="44.0" y1="190.0" x2="44.0" y2="8.0" stroke="#8593A0" stroke-width="1.3" stroke-linecap="round"/><polygon points="44.0,8.0 47.6,14.5 40.4,14.5" fill="#8593A0" fill-opacity="1.0" stroke="none" stroke-width="0"/><text x="290.0" y="192.0" text-anchor="start" font-size="11.5" fill="#52626F" font-family="'IBM Plex Sans',sans-serif" font-weight="400">S</text><text x="44.0" y="3.0" text-anchor="start" font-size="11.5" fill="#52626F" font-family="'IBM Plex Sans',sans-serif" font-weight="400">cena</text><polygon points="44.0,110.7 276.0,110.7 276.0,188.0 150.7,188.0 44.0,110.7" fill="#EAF1F7" fill-opacity="1.0" stroke="none" stroke-width="0"/><polyline points="44.0,110.7 276.0,110.7" fill="none" stroke="#52626F" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/><polyline points="44.0,110.7 150.7,188.0 276.0,188.0" fill="none" stroke="#BC2B2B" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><line x1="150.7" y1="188.0" x2="150.7" y2="180.0" stroke="#BC2B2B" stroke-width="1.2" stroke-linecap="round"/><text x="150.7" y="206.0" text-anchor="middle" font-size="10.5" fill="#BC2B2B" font-family="'IBM Plex Mono',monospace" font-weight="500">K·v</text><text x="206.4" y="123.7" text-anchor="middle" font-size="10.5" fill="#52626F" font-family="'IBM Plex Sans',sans-serif" font-weight="500">P ≤ K·v</text><text x="99.7" y="127.5" text-anchor="middle" font-size="10.5" fill="#BC2B2B" font-family="'IBM Plex Sans',sans-serif" font-weight="600">P ≥ K·v−S</text></svg><div class="fig-cell__label">Put opce</div></div></div><figcaption>Bezarbitrážní meze opční ceny. Cena musí ležet ve vyznačeném pásmu mezi dolní a horní mezí; jinak by šlo sestavit arbitrážní strategii. (v = diskontní faktor.)</figcaption></figure><h2>C5. Citlivost opcí — řecká písmena (greeks)</h2><figure class="fig"><svg viewBox="0 0 620 330" xmlns="http://www.w3.org/2000/svg" role="img"><line x1="62.0" y1="248.7" x2="546.0" y2="248.7" stroke="#8593A0" stroke-width="1.3" stroke-linecap="round"/><polygon points="546.0,248.7 539.5,252.3 539.5,245.1" fill="#8593A0" fill-opacity="1.0" stroke="none" stroke-width="0"/><line x1="64.0" y1="268.0" x2="64.0" y2="12.0" stroke="#8593A0" stroke-width="1.3" stroke-linecap="round"/><polygon points="64.0,12.0 67.6,18.5 60.4,18.5" fill="#8593A0" fill-opacity="1.0" stroke="none" stroke-width="0"/><text x="548.0" y="252.7" text-anchor="start" font-size="11.5" fill="#52626F" font-family="'IBM Plex Sans',sans-serif" font-weight="400">S</text><text x="64.0" y="7.0" text-anchor="start" font-size="11.5" fill="#52626F" font-family="'IBM Plex Sans',sans-serif" font-weight="400">cena call</text><polyline points="64.0,248.6 68.7,248.6 73.4,248.5 78.1,248.5 82.8,248.4 87.5,248.4 92.2,248.3 96.9,248.2 101.6,248.0 106.3,247.9 111.0,247.7 115.7,247.5 120.4,247.2 125.1,246.9 129.8,246.5 134.5,246.1 139.2,245.6 143.9,245.0 148.6,244.4 153.3,243.6 158.0,242.8 162.7,241.9 167.4,240.8 172.1,239.6 176.8,238.3 181.5,236.9 186.2,235.4 190.9,233.7 195.6,232.0 200.3,230.1 205.0,228.0 209.7,225.9 214.4,223.7 219.1,221.4 223.8,219.1 228.5,216.7 233.2,214.3 237.9,211.9 242.6,209.5 247.3,207.2 252.0,205.0 256.7,202.8 261.4,200.8 266.1,199.0 270.8,197.4 275.5,195.9 280.2,194.7 284.9,193.8 289.6,193.1 294.3,192.7 299.0,192.5 303.7,188.4 308.4,184.5 313.1,180.8 317.8,177.5 322.5,174.3 327.2,171.4 331.9,168.8 336.6,166.3 341.3,163.9 346.0,161.7 350.7,159.7 355.4,157.7 360.1,155.7 364.8,153.8 369.5,151.9 374.2,149.9 378.9,148.0 383.6,145.9 388.3,143.8 393.0,141.6 397.7,139.3 402.4,136.9 407.1,134.4 411.8,131.7 416.5,128.9 421.2,126.0 425.9,123.0 430.6,119.8 435.3,116.5 440.0,113.2 444.7,109.7 449.4,106.1 454.1,102.4 458.8,98.7 463.5,94.8 468.2,90.9 472.9,87.0 477.6,83.0 482.3,78.9 487.0,74.8 491.7,70.7 496.4,66.5 501.1,62.3 505.8,58.1 510.5,53.9 515.2,49.6 519.9,45.4 524.6,41.1 529.3,36.8 534.0,32.5" fill="none" stroke="#1B2733" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><line x1="299.0" y1="266.0" x2="299.0" y2="259.0" stroke="#BC2B2B" stroke-width="1.1" stroke-linecap="round"/><text x="299.0" y="284.0" text-anchor="middle" font-size="10.5" fill="#BC2B2B" font-family="'IBM Plex Mono',monospace" font-weight="400">K</text><line x1="139.2" y1="257.0" x2="270.8" y2="199.1" stroke="#2A5C86" stroke-width="2.0" stroke-linecap="round"/><circle cx="205.0" cy="228.0" r="3.2" fill="#2A5C86"/><text x="205.0" y="216.0" text-anchor="middle" font-size="10.5" fill="#2A5C86" font-family="'IBM Plex Mono',monospace" font-weight="500">Δ ≈ 0,15</text><line x1="233.2" y1="222.8" x2="364.8" y2="162.3" stroke="#BC2B2B" stroke-width="2.0" stroke-linecap="round"/><circle cx="299.0" cy="192.5" r="3.2" fill="#BC2B2B"/><text x="299.0" y="180.5" text-anchor="middle" font-size="10.5" fill="#BC2B2B" font-family="'IBM Plex Mono',monospace" font-weight="500">Δ ≈ 0,5</text><line x1="336.6" y1="171.6" x2="468.2" y2="102.2" stroke="#1B2733" stroke-width="2.0" stroke-linecap="round"/><circle cx="402.4" cy="136.9" r="3.2" fill="#1B2733"/><text x="402.4" y="124.9" text-anchor="middle" font-size="10.5" fill="#1B2733" font-family="'IBM Plex Mono',monospace" font-weight="500">Δ ≈ 0,9</text><text x="299.0" y="262.0" text-anchor="middle" font-size="11" fill="#52626F" font-family="'IBM Plex Sans',sans-serif" font-weight="500">sklon křivky = delta = zajišťovací poměr h</text></svg><figcaption>Delta = sklon tečny ke křivce ceny opce, tedy citlivost na cenu podkladu. Hluboko mimo peníze je blízká 0, na penězích ≈ 0,5, hluboko v penězích ≈ 1. Zároveň je to zajišťovací poměr h.</figcaption></figure>
+<p>Citlivosti měří, jak reaguje cena opce na změnu jednotlivých vstupních parametrů. Základem (a jediným, který se přímo odvozuje v binomickém modelu) je <strong>delta</strong>.</p>
+<p><strong>Delta</strong> $\;\Delta = \dfrac{\partial V}{\partial S}$
+- Citlivost ceny opce na změnu ceny podkladu. <strong>Rovná se zajišťovacímu poměru $h$.</strong>
+- Call: $\Delta \in (0,1)$; put: $\Delta \in (-1,0)$; opce na penězích: $|\Delta|\approx 0{,}5$.
+- Z binomického modelu: $\;\Delta = h = \dfrac{C_u - C_d}{S_u - S_d}$, a tedy $\;\Delta C \approx \Delta\cdot \Delta S \Rightarrow \Delta \approx \dfrac{\Delta C}{\Delta S}$.</p>
+<p><strong>Gamma</strong> $\;\Gamma = \dfrac{\partial^2 V}{\partial S^2} = \dfrac{\partial \Delta}{\partial S}$
+- Rychlost změny delty (zakřivení). Stejná pro call i put.
+- Nejvyšší <strong>na penězích</strong> a blízko expirace; vysoká gamma → delta se rychle mění → nutné časté přehedgování.</p>
+<p><strong>Theta</strong> $\;\Theta = \dfrac{\partial V}{\partial t}$
+- Časový rozpad (time decay). Pro dlouhé pozice obvykle <strong>záporná</strong> — opce ztrácí časovou hodnotu, jak se blíží expirace. Nejvýraznější na penězích krátce před expirací.</p>
+<p><strong>Vega</strong> $\;\nu = \dfrac{\partial V}{\partial \sigma}$
+- Citlivost na volatilitu. Pro dlouhé pozice <strong>kladná</strong> (vyšší $\sigma$ → dražší opce). Nejvyšší na penězích. (Vega není písmeno řecké abecedy, ale tradičně se mezi greeks řadí.)</p>
+<p><strong>Rho</strong> $\;\rho = \dfrac{\partial V}{\partial r_f}$
+- Citlivost na bezrizikovou úrokovou míru. Call: <strong>kladná</strong>; put: <strong>záporná</strong>.</p>
+<h2>C6. Zajištění pomocí opcí (delta hedging)</h2>
+<p><strong>Zajišťovací poměr (hedge ratio)</strong> vychází z binomického modelu. V čase $t$ sestavíme portfolio:
+- vypíšeme <strong>1 call opci</strong>,
+- koupíme <strong>$h$ akcií</strong>,
+- hodnota portfolia: $\;C - h S$ (resp. $hS - C$ z pohledu držby akcií a short opce).</p>
+<p>Požadujeme, aby hodnota portfolia byla <strong>stejná</strong> při růstu i poklesu (tedy bezriziková):</p>
+<p>$$hS_u - C_u = hS_d - C_d \quad\Rightarrow\quad h = \frac{C_u - C_d}{S_u - S_d}.$$</p>
+<p>Takto sestavené portfolio ($h$ akcií + 1 short call) je <strong>na jedno období bezrizikové</strong>.</p>
+<p><strong>Delta hedging v praxi:</strong>
+- Cílem je <strong>delta-neutrální portfolio</strong> ($\Delta_{\text{portfolio}} = 0$), které je lokálně <strong>necitlivé na malé pohyby</strong> ceny podkladu.
+- Pro zajištění 1 short call drží investor $\Delta$ akcií (a naopak).
+- Protože se delta s pohybem ceny <strong>mění</strong> (nenulová gamma), je nutné pozici <strong>dynamicky rebalancovat</strong>. Čím vyšší gamma, tím častěji.
+- Vyšší řády (gamma, vega) se zajišťují pomocí dalších opcí (gamma/vega hedging), aby bylo portfolio odolné i vůči větším pohybům a změnám volatility.</p>
+<hr>
+<h2>Shrnutí klíčových vzorců</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Pojem</th>
+<th>Vztah</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vnitřní hodnota call</td>
+<td>$IV_{call} = \max(0, S_t - K)$</td>
+</tr>
+<tr>
+<td>Vnitřní hodnota put</td>
+<td>$IV_{put} = \max(0, K - S_t)$</td>
+</tr>
+<tr>
+<td>Put-call parita (EU)</td>
+<td>$P_t = C_t + K\cdot v - S_t$</td>
+</tr>
+<tr>
+<td>Mez call</td>
+<td>$\max(0, S_t - K\cdot v) \le C_t \le S_t$</td>
+</tr>
+<tr>
+<td>Mez put</td>
+<td>$\max(0, K\cdot v - S_t) \le P_t \le K\cdot v$</td>
+</tr>
+<tr>
+<td>Americké opce</td>
+<td>$C_t^A = C_t^E,\quad P_t^A \ge P_t^E$</td>
+</tr>
+<tr>
+<td>Binomický model (1 období)</td>
+<td>$C = \dfrac{p_1 C_u + p_2 C_d}{1+r_f}$</td>
+</tr>
+<tr>
+<td>Rizikově neutrální pravd.</td>
+<td>$p_1 = \dfrac{(1+r_f)-d}{u-d},\; p_2 = 1-p_1$</td>
+</tr>
+<tr>
+<td>Parametry stromu</td>
+<td>$u = e^{\sigma\sqrt{T/n}},\; d = 1/u$</td>
+</tr>
+<tr>
+<td>Black-Scholes (call)</td>
+<td>$C_t = S_t\Phi(d_1) - Ke^{-r_f(T-t)}\Phi(d_2)$</td>
+</tr>
+<tr>
+<td>Zajišťovací poměr / delta</td>
+<td>$h = \Delta = \dfrac{C_u - C_d}{S_u - S_d} \approx \dfrac{\Delta C}{\Delta S}$</td>
+</tr>
+</tbody>
+</table></div>
+<hr>
+<h2>Pojmy na rychlé zopakování</h2>
+<ul>
+<li><strong>Call / put</strong> — právo koupit / prodat; <strong>long / short</strong> — kupující (právo) / vypisovatel (povinnost).</li>
+<li><strong>Americká vs. evropská</strong> — uplatnění kdykoliv vs. jen v expiraci.</li>
+<li><strong>Opční prémie</strong> = vnitřní hodnota + časová hodnota.</li>
+<li><strong>Moneyness</strong> — v penězích / na penězích / mimo peníze.</li>
+<li><strong>Put-call parita</strong> — vazba mezi cenou call a put (model dílčí rovnováhy).</li>
+<li><strong>Meze opční ceny</strong> — odvození porovnáním dvou strategií (která je v $T$ vždy lepší, musí být dražší).</li>
+<li><strong>Binomický model (CRR)</strong> — replikace / rizikově neutrální pravděpodobnosti; konverguje k Black-Scholesovi.</li>
+<li><strong>Rizikově neutrální pravděpodobnosti</strong> $p_i$ — nejsou reálné, ale chovají se jako pravděpodobnosti.</li>
+<li><strong>Greeks</strong> — delta (Δ), gamma (Γ), theta (Θ), vega (ν), rho (ρ).</li>
+<li><strong>Delta hedging</strong> — delta-neutrální portfolio, dynamické rebalancování (kvůli gammě).</li>
+<li><strong>Kombinované strategie</strong> — straddle/strangle (pohyb), spread (směr), butterfly/condor (klid), strip/strap (pohyb se sklonem).</li>
+</ul>
+</article></main>
+<a class="totop" href="#" aria-label="Nahoru">&uarr;</a>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded",function(){
+  function run(){
+    if(!window.renderMathInElement){return setTimeout(run,60);}
+    renderMathInElement(document.body,{
+      delimiters:[{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],
+      throwOnError:false
+    });
+  }
+  run();
+  var t=document.querySelector(".totop");
+  if(t){window.addEventListener("scroll",function(){
+    t.classList.toggle("show",window.scrollY>600);
+  });}
+});
+</script>
+</body>
+</html>
