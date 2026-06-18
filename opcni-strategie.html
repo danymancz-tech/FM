@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<title>Opční strategie (interaktivní) · Vypracované otázky KMA/MFM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#E9EDF1;--grid:#DBE1E8;--ink:#1B2733;--ink-soft:#52626F;
+  --ink-faint:#8593A0;--accent:#BC2B2B;--border:#DCE2E8}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;color:var(--ink);background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),
+                   linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:26px 26px;
+  font-family:'IBM Plex Sans',system-ui,-apple-system,sans-serif;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+.topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;
+  justify-content:space-between;gap:1rem;padding:.7rem clamp(1rem,4vw,2rem);
+  background:rgba(255,255,255,.82);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);font-family:'IBM Plex Mono',monospace;font-size:.8rem}
+.topbar__back{color:var(--ink-soft);text-decoration:none}
+.topbar__back:hover{color:var(--accent)}
+.topbar__tag{color:var(--ink-faint);letter-spacing:.08em;text-transform:uppercase}
+.tool-wrap{max-width:1060px;margin:clamp(1rem,3vw,2.2rem) auto;
+  padding:0 clamp(.7rem,3vw,1.4rem)}
+.tool-note{max-width:660px;margin:1.4rem auto 0;font-size:.85rem;line-height:1.55;
+  color:var(--ink-soft);font-family:'IBM Plex Sans',sans-serif;
+  padding-left:.9rem;border-left:2px solid var(--accent)}
+.tool-fallback{display:none;max-width:660px;margin:2rem auto;padding:1rem 1.2rem;
+  background:#fff;border:1px solid var(--border);border-radius:8px;
+  color:var(--ink-soft);font-size:.9rem;line-height:1.6}
+#root:empty + .tool-fallback{display:block}
+.loadmsg{max-width:660px;margin:3rem auto;text-align:center;color:var(--ink-faint);
+  font-family:'IBM Plex Mono',monospace;font-size:.85rem}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="topbar__back" href="index.html">&larr; Vypracované otázky</a>
+  <span class="topbar__tag">Interaktivní &middot; Opční strategie</span>
+</header>
+<main class="tool-wrap">
+  <div id="root"><div class="loadmsg">Načítám interaktivní graf…</div></div>
+  <div class="tool-fallback">
+    Nástroj se nenačetl — potřebuje <strong>připojení k internetu</strong> (knihovny React a
+    Recharts se stahují z CDN). Zkontroluj připojení a načti stránku znovu.
+  </div>
+  <p class="tool-note">
+    Vyber hotovou strategii, nebo si poskládej vlastní pozice (call, put, akcie) a sleduj
+    výsledný zisk/ztrátu při splatnosti. Zelená plocha = zisk, červená = ztráta; přerušovaná
+    svislá čára je aktuální cena podkladu S<sub>0</sub>, kroužky jsou body zvratu.
+  </p>
+</main>
+
+<!-- React + Recharts + Babel z CDN (běží přímo v prohlížeči, bez build kroku) -->
+<script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-is@18.2.0/umd/react-is.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/recharts@2.12.7/umd/Recharts.min.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js" crossorigin></script>
+
+<script type="text/babel" data-presets="react">
+const { useState, useMemo } = React;
+const { ComposedChart, Area, Line, XAxis, YAxis, CartesianGrid, Tooltip,
+        ReferenceLine, ReferenceDot, ResponsiveContainer } = Recharts;
+
+
+/* ---------- téma ---------- */
+const T = {
+  bg: "transparent",
+  surface: "#FFFFFF",
+  border: "#DCE2E8",
+  ink: "#1B2733",
+  muted: "#52626F",
+  faint: "#8593A0",
+  accent: "#BC2B2B",
+  accentSoft: "#FBEDED",
+  profit: "#1F8A5B",
+  loss: "#D2553B",
+  grid: "#EAEEF2",
+  mono: "'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace",
+  sans: "'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+};
+
+const LEG_COLORS = ["#8B5CF6", "#0EA5E9", "#F59E0B", "#EC4899", "#0D9488", "#64748B"];
+
+const TYPES = {
+  LC: { label: "Long Call", short: "LC", isOption: true },
+  SC: { label: "Short Call", short: "SC", isOption: true },
+  LP: { label: "Long Put", short: "LP", isOption: true },
+  SP: { label: "Short Put", short: "SP", isOption: true },
+  LS: { label: "Long akcie", short: "LS", isOption: false },
+  SS: { label: "Short akcie", short: "SS", isOption: false },
+};
+
+/* ---------- matematika výplat ---------- */
+// profit (vč. prémie) jedné nohy při ceně S
+function legProfit(leg, S) {
+  const { type, strike: K, premium: pr, qty: q } = leg;
+  switch (type) {
+    case "LC": return (Math.max(S - K, 0) - pr) * q;
+    case "SC": return (pr - Math.max(S - K, 0)) * q;
+    case "LP": return (Math.max(K - S, 0) - pr) * q;
+    case "SP": return (pr - Math.max(K - S, 0)) * q;
+    case "LS": return (S - K) * q; // K = vstupní cena
+    case "SS": return (K - S) * q;
+    default: return 0;
+  }
+}
+// sklon profitu pro S -> +∞ (rozhoduje o (ne)omezenosti)
+function rightSlope(leg) {
+  const q = leg.qty;
+  switch (leg.type) {
+    case "LC": case "LS": return q;
+    case "SC": case "SS": return -q;
+    default: return 0; // LP, SP
+  }
+}
+
+/* ---------- přednastavené strategie ---------- */
+const uid = (() => { let i = 0; return () => ++i; })();
+const mk = (type, strike, premium, qty = 1) => ({ id: uid(), type, strike, premium, qty });
+
+const PRESETS = {
+  "Long Call": [mk("LC", 100, 5)],
+  "Long Put": [mk("LP", 100, 5)],
+  "Bull call spread": [mk("LC", 95, 8), mk("SC", 110, 3)],
+  "Bear put spread": [mk("LP", 110, 8), mk("SP", 95, 3)],
+  "Long straddle": [mk("LC", 100, 6), mk("LP", 100, 5)],
+  "Long strangle": [mk("LC", 110, 3), mk("LP", 90, 3)],
+  "Butterfly (call)": [mk("LC", 90, 12), mk("SC", 100, 6, 2), mk("LC", 110, 2)],
+  "Covered call": [mk("LS", 100, 0), mk("SC", 105, 3)],
+  "Protective put": [mk("LS", 100, 0), mk("LP", 100, 5)],
+};
+
+/* ---------- formátování ---------- */
+const MINUS = "\u2212";
+function fmt(x, dec = 1) {
+  if (!isFinite(x)) return x > 0 ? "+\u221E" : MINUS + "\u221E";
+  const s = x.toFixed(dec);
+  return s.startsWith("-") ? MINUS + s.slice(1) : (x > 0 ? "+" + s : s);
+}
+function fmtPlain(x, dec = 1) {
+  if (!isFinite(x)) return x > 0 ? "\u221E" : MINUS + "\u221E";
+  const s = x.toFixed(dec);
+  return s.startsWith("-") ? MINUS + s.slice(1) : s;
+}
+
+function OpcniStrategie() {
+  const [legs, setLegs] = useState(PRESETS["Bull call spread"]);
+  const [activePreset, setActivePreset] = useState("Bull call spread");
+  const [S0, setS0] = useState(100);
+  const [showLegs, setShowLegs] = useState(false);
+
+  /* ---- odvozené veličiny ---- */
+  const model = useMemo(() => {
+    if (legs.length === 0) {
+      return { data: [], lo: 0, hi: 200, maxProfit: 0, maxLoss: 0, breakevens: [], gradOffset: 0.5 };
+    }
+    const prices = legs.map((l) => l.strike).filter((v) => isFinite(v));
+    const minK = Math.min(...prices);
+    const maxK = Math.max(...prices);
+    const span = maxK - minK;
+    const pad = span > 0 ? span * 0.7 : Math.max(maxK * 0.4, 20);
+    const lo = Math.max(0, minK - pad);
+    const hi = maxK + pad;
+
+    const N = 260;
+    const data = [];
+    for (let i = 0; i <= N; i++) {
+      const s = lo + ((hi - lo) * i) / N;
+      const row = { s, profit: legs.reduce((a, l) => a + legProfit(l, s), 0) };
+      legs.forEach((l) => { row["leg" + l.id] = legProfit(l, s); });
+      data.push(row);
+    }
+
+    // (ne)omezenost z asymptotického sklonu vpravo + extrémy v zlomech
+    const slope = legs.reduce((a, l) => a + rightSlope(l), 0);
+    const candidates = Array.from(new Set([0, ...prices, hi])).sort((a, b) => a - b);
+    const vals = candidates.map((s) => legs.reduce((a, l) => a + legProfit(l, s), 0));
+    const finiteMax = Math.max(...vals);
+    const finiteMin = Math.min(...vals);
+    const maxProfit = slope > 1e-9 ? Infinity : finiteMax;
+    const maxLoss = slope < -1e-9 ? -Infinity : finiteMin;
+
+    // break-eveny: změny znaménka na jemné mřížce + lineární interpolace
+    const breakevens = [];
+    for (let i = 1; i < data.length; i++) {
+      const a = data[i - 1], b = data[i];
+      if (a.profit === 0) breakevens.push(a.s);
+      else if (a.profit * b.profit < 0) {
+        const t = a.profit / (a.profit - b.profit);
+        breakevens.push(a.s + t * (b.s - a.s));
+      }
+    }
+    const beUnique = breakevens.filter((v, i) => breakevens.findIndex((w) => Math.abs(w - v) < (hi - lo) / 400) === i);
+
+    const dMax = Math.max(...data.map((d) => d.profit));
+    const dMin = Math.min(...data.map((d) => d.profit));
+    let gradOffset = 0.5;
+    if (dMax <= 0) gradOffset = 0;
+    else if (dMin >= 0) gradOffset = 1;
+    else gradOffset = dMax / (dMax - dMin);
+
+    return { data, lo, hi, maxProfit, maxLoss, breakevens: beUnique, gradOffset };
+  }, [legs]);
+
+  /* ---- akce ---- */
+  const applyPreset = (name) => {
+    setLegs(PRESETS[name].map((l) => ({ ...l, id: uid() })));
+    setActivePreset(name);
+  };
+  const updateLeg = (id, patch) => {
+    setLegs((ls) => ls.map((l) => (l.id === id ? { ...l, ...patch } : l)));
+    setActivePreset(null);
+  };
+  const addLeg = () => {
+    setLegs((ls) => [...ls, mk("LC", S0, 5)]);
+    setActivePreset(null);
+  };
+  const removeLeg = (id) => {
+    setLegs((ls) => ls.filter((l) => l.id !== id));
+    setActivePreset(null);
+  };
+
+  /* ---- tooltip ---- */
+  const TipBox = ({ active, payload, label }) => {
+    if (!active || !payload || !payload.length) return null;
+    const p = payload.find((x) => x.dataKey === "profit");
+    const val = p ? p.value : 0;
+    return (
+      <div style={{ background: T.surface, border: `1px solid ${T.border}`, borderRadius: 8, padding: "8px 10px", fontFamily: T.mono, fontSize: 12, boxShadow: "0 4px 16px rgba(20,29,40,.08)" }}>
+        <div style={{ color: T.muted }}>S<sub>T</sub> = {label.toFixed(1)}</div>
+        <div style={{ color: val >= 0 ? T.profit : T.loss, fontWeight: 600, fontSize: 14 }}>
+          P/L = {fmt(val)}
+        </div>
+      </div>
+    );
+  };
+
+  const statCard = (label, value, color) => (
+    <div style={{ flex: 1, minWidth: 110, background: T.surface, border: `1px solid ${T.border}`, borderRadius: 10, padding: "12px 14px" }}>
+      <div style={{ fontSize: 11, letterSpacing: ".04em", textTransform: "uppercase", color: T.faint, fontFamily: T.sans }}>{label}</div>
+      <div style={{ fontSize: 20, fontWeight: 600, fontFamily: T.mono, color, marginTop: 4 }}>{value}</div>
+    </div>
+  );
+
+  return (
+    <div style={{ background: T.bg, color: T.ink, fontFamily: T.sans, padding: 20, borderRadius: 14 }}>
+      {/* hlavička */}
+      <div style={{ marginBottom: 18 }}>
+        <div style={{ fontSize: 12, letterSpacing: ".14em", textTransform: "uppercase", color: T.accent, fontFamily: T.mono }}>
+          Payoff / profit diagram
+        </div>
+        <h1 style={{ fontSize: 24, fontWeight: 700, margin: "4px 0 2px", letterSpacing: "-.01em" }}>
+          Opční strategie — výsledný zisk
+        </h1>
+        <p style={{ color: T.muted, fontSize: 14, margin: 0, maxWidth: 640 }}>
+          Slož pozice (LC, SC, LP, SP, akcie) a sleduj celkový zisk/ztrátu při splatnosti jako funkci ceny podkladu S<sub>T</sub>. Zelená = zisk, červená = ztráta.
+        </p>
+      </div>
+
+      <div className="grid" style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,1.4fr)", gap: 18 }}>
+        {/* ----- levý panel: ovládání ----- */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 14, minWidth: 0 }}>
+          {/* presety */}
+          <div style={{ background: T.surface, border: `1px solid ${T.border}`, borderRadius: 12, padding: 14 }}>
+            <div style={{ fontSize: 11, letterSpacing: ".04em", textTransform: "uppercase", color: T.faint, marginBottom: 10 }}>Strategie</div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
+              {Object.keys(PRESETS).map((name) => {
+                const on = activePreset === name;
+                return (
+                  <button key={name} onClick={() => applyPreset(name)}
+                    style={{
+                      cursor: "pointer", fontFamily: T.sans, fontSize: 12.5, padding: "6px 10px",
+                      borderRadius: 999, border: `1px solid ${on ? T.accent : T.border}`,
+                      background: on ? T.accent : T.surface, color: on ? "#fff" : T.ink,
+                      transition: "all .12s",
+                    }}>
+                    {name}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* nohy */}
+          <div style={{ background: T.surface, border: `1px solid ${T.border}`, borderRadius: 12, padding: 14 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+              <div style={{ fontSize: 11, letterSpacing: ".04em", textTransform: "uppercase", color: T.faint }}>Pozice (nohy)</div>
+              <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: T.muted, cursor: "pointer" }}>
+                <input type="checkbox" checked={showLegs} onChange={(e) => setShowLegs(e.target.checked)} />
+                jednotlivé nohy
+              </label>
+            </div>
+
+            {/* záhlaví sloupců */}
+            <div style={{ display: "grid", gridTemplateColumns: "1.4fr .9fr .9fr .7fr 24px", gap: 8, fontSize: 10.5, color: T.faint, padding: "0 2px 6px", textTransform: "uppercase", letterSpacing: ".03em" }}>
+              <span>Typ</span><span>Strike / cena</span><span>Prémie</span><span>Počet</span><span />
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {legs.map((l, idx) => {
+                const isOpt = TYPES[l.type].isOption;
+                return (
+                  <div key={l.id} style={{ display: "grid", gridTemplateColumns: "1.4fr .9fr .9fr .7fr 24px", gap: 8, alignItems: "center" }}>
+                    <select value={l.type} onChange={(e) => updateLeg(l.id, { type: e.target.value })}
+                      style={selStyle(showLegs ? LEG_COLORS[idx % LEG_COLORS.length] : null)}>
+                      {Object.entries(TYPES).map(([k, v]) => <option key={k} value={k}>{v.short} · {v.label}</option>)}
+                    </select>
+                    <input type="number" value={l.strike} step="1"
+                      onChange={(e) => updateLeg(l.id, { strike: parseFloat(e.target.value) || 0 })} style={inpStyle} />
+                    <input type="number" value={isOpt ? l.premium : 0} step="0.5" disabled={!isOpt}
+                      onChange={(e) => updateLeg(l.id, { premium: parseFloat(e.target.value) || 0 })}
+                      style={{ ...inpStyle, opacity: isOpt ? 1 : 0.4 }} />
+                    <input type="number" value={l.qty} step="1" min="1"
+                      onChange={(e) => updateLeg(l.id, { qty: parseFloat(e.target.value) || 1 })} style={inpStyle} />
+                    <button onClick={() => removeLeg(l.id)} title="Odebrat"
+                      style={{ cursor: "pointer", border: "none", background: "transparent", color: T.faint, fontSize: 18, lineHeight: 1, padding: 0 }}>
+                      {"\u00D7"}
+                    </button>
+                  </div>
+                );
+              })}
+              {legs.length === 0 && <div style={{ color: T.faint, fontSize: 13, padding: "8px 2px" }}>Žádné pozice — přidej nohu nebo zvol strategii.</div>}
+            </div>
+
+            <button onClick={addLeg}
+              style={{ marginTop: 12, cursor: "pointer", fontFamily: T.sans, fontSize: 13, padding: "7px 12px", borderRadius: 8, border: `1px dashed ${T.border}`, background: T.accentSoft, color: T.accent, width: "100%" }}>
+              + Přidat pozici
+            </button>
+          </div>
+
+          {/* S0 */}
+          <div style={{ background: T.surface, border: `1px solid ${T.border}`, borderRadius: 12, padding: "12px 14px", display: "flex", alignItems: "center", gap: 10 }}>
+            <span style={{ fontSize: 13, color: T.muted }}>Aktuální cena podkladu S<sub>0</sub></span>
+            <input type="number" value={S0} step="1" onChange={(e) => setS0(parseFloat(e.target.value) || 0)}
+              style={{ ...inpStyle, width: 90, marginLeft: "auto" }} />
+          </div>
+        </div>
+
+        {/* ----- pravý panel: graf + statistiky ----- */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 14, minWidth: 0 }}>
+          <div style={{ background: T.surface, border: `1px solid ${T.border}`, borderRadius: 12, padding: "14px 14px 6px" }}>
+            <ResponsiveContainer width="100%" height={360}>
+              <ComposedChart data={model.data} margin={{ top: 8, right: 16, bottom: 18, left: 4 }}>
+                <defs>
+                  <linearGradient id="plFill" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset={0} stopColor={T.profit} stopOpacity={0.22} />
+                    <stop offset={model.gradOffset} stopColor={T.profit} stopOpacity={0.04} />
+                    <stop offset={model.gradOffset} stopColor={T.loss} stopOpacity={0.05} />
+                    <stop offset={1} stopColor={T.loss} stopOpacity={0.22} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid stroke={T.grid} strokeDasharray="0" vertical={false} />
+                <XAxis dataKey="s" type="number" domain={[model.lo, model.hi]}
+                  tick={{ fontSize: 11, fontFamily: T.mono, fill: T.muted }} stroke={T.border}
+                  tickFormatter={(v) => v.toFixed(0)}
+                  label={{ value: "Sₜ (cena podkladu při splatnosti)", position: "insideBottom", offset: -10, fontSize: 11, fill: T.faint }} />
+                <YAxis tick={{ fontSize: 11, fontFamily: T.mono, fill: T.muted }} stroke={T.border}
+                  tickFormatter={(v) => fmtPlain(v, 0)} width={46} />
+                <Tooltip content={<TipBox />} cursor={{ stroke: T.faint, strokeDasharray: "3 3" }} />
+
+                <ReferenceLine y={0} stroke={T.ink} strokeWidth={1.4} />
+                <ReferenceLine x={S0} stroke={T.accent} strokeDasharray="4 4" strokeWidth={1}
+                  label={{ value: "S₀", position: "top", fontSize: 11, fill: T.accent, fontFamily: T.mono }} />
+
+                <Area type="linear" dataKey="profit" stroke="none" fill="url(#plFill)" isAnimationActive={false} />
+
+                {showLegs && legs.map((l, idx) => (
+                  <Line key={l.id} type="linear" dataKey={"leg" + l.id} dot={false} isAnimationActive={false}
+                    stroke={LEG_COLORS[idx % LEG_COLORS.length]} strokeWidth={1.2} strokeDasharray="5 4" opacity={0.8} />
+                ))}
+
+                <Line type="linear" dataKey="profit" dot={false} isAnimationActive={false}
+                  stroke={T.ink} strokeWidth={2.4} />
+
+                {model.breakevens.map((be, i) => (
+                  <ReferenceDot key={i} x={be} y={0} r={4} fill={T.surface} stroke={T.accent} strokeWidth={2} />
+                ))}
+              </ComposedChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* statistiky */}
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+            {statCard("Max zisk", fmt(model.maxProfit), model.maxProfit >= 0 ? T.profit : T.loss)}
+            {statCard("Max ztráta", fmt(model.maxLoss), model.maxLoss >= 0 ? T.profit : T.loss)}
+            {statCard(
+              model.breakevens.length > 1 ? "Break-even body" : "Break-even",
+              model.breakevens.length ? model.breakevens.map((b) => b.toFixed(1)).join("  ·  ") : "\u2014",
+              T.accent
+            )}
+          </div>
+
+          {showLegs && legs.length > 0 && (
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 12, padding: "2px 4px" }}>
+              {legs.map((l, idx) => (
+                <span key={l.id} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: T.muted, fontFamily: T.mono }}>
+                  <span style={{ width: 14, height: 0, borderTop: `2px dashed ${LEG_COLORS[idx % LEG_COLORS.length]}` }} />
+                  {l.qty > 1 ? l.qty + "× " : ""}{TYPES[l.type].short} K{l.strike}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      <style>{`
+        @media (max-width: 760px) {
+          .grid { grid-template-columns: 1fr !important; }
+        }
+        input[type=number]:focus, select:focus { outline: 2px solid ${T.accent}33; outline-offset: 0; }
+      `}</style>
+    </div>
+  );
+}
+
+/* ---------- styly inputů ---------- */
+const inpStyle = {
+  width: "100%", boxSizing: "border-box", fontFamily: T.mono, fontSize: 13,
+  padding: "6px 8px", borderRadius: 7, border: `1px solid ${T.border}`,
+  background: "#FBFBFD", color: T.ink,
+};
+function selStyle(dotColor) {
+  return {
+    width: "100%", boxSizing: "border-box", fontFamily: T.sans, fontSize: 12.5,
+    padding: "6px 8px", borderRadius: 7, border: `1px solid ${dotColor || T.border}`,
+    borderLeftWidth: dotColor ? 3 : 1, background: "#FBFBFD", color: T.ink,
+  };
+}
+
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  React.createElement(OpcniStrategie)
+);
+</script>
+</body>
+</html>
