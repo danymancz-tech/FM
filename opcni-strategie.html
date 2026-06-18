@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<title>Opční strategie (interaktivní) · Vypracované otázky KMA/MFM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#E9EDF1;--grid:#DBE1E8;--ink:#1B2733;--ink-soft:#52626F;
+  --ink-faint:#8593A0;--accent:#BC2B2B;--border:#DCE2E8}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;color:var(--ink);background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),
+                   linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:26px 26px;
+  font-family:'IBM Plex Sans',system-ui,-apple-system,sans-serif;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+.topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;
+  justify-content:space-between;gap:1rem;padding:.7rem clamp(1rem,4vw,2rem);
+  background:rgba(255,255,255,.82);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);font-family:'IBM Plex Mono',monospace;font-size:.8rem}
+.topbar__back{color:var(--ink-soft);text-decoration:none}
+.topbar__back:hover{color:var(--accent)}
+.topbar__tag{color:var(--ink-faint);letter-spacing:.08em;text-transform:uppercase}
+.tool-wrap{max-width:1060px;margin:clamp(1rem,3vw,2.2rem) auto;
+  padding:0 clamp(.7rem,3vw,1.4rem)}
+.tool-note{max-width:660px;margin:1.4rem auto 0;font-size:.85rem;line-height:1.55;
+  color:var(--ink-soft);padding-left:.9rem;border-left:2px solid var(--accent)}
+.tool-fallback{display:none;max-width:660px;margin:2rem auto;padding:1rem 1.2rem;
+  background:#fff;border:1px solid var(--border);border-radius:8px;
+  color:var(--ink-soft);font-size:.9rem;line-height:1.6}
+.loadmsg{max-width:660px;margin:3rem auto;text-align:center;color:var(--ink-faint);
+  font-family:'IBM Plex Mono',monospace;font-size:.85rem}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="topbar__back" href="index.html">&larr; Vypracované otázky</a>
+  <span class="topbar__tag">Interaktivní &middot; Opční strategie</span>
+</header>
+<main class="tool-wrap">
+  <div id="root"><div class="loadmsg">Načítám interaktivní graf…</div></div>
+  <div class="tool-fallback">
+    Nástroj se nenačetl. Zkus prosím načíst stránku znovu (Ctrl/Cmd&nbsp;+&nbsp;R).
+  </div>
+  <p class="tool-note">
+    Vyber hotovou strategii, nebo si poskládej vlastní pozice (call, put, akcie) a sleduj
+    výsledný zisk/ztrátu při splatnosti. Zelená plocha = zisk, červená = ztráta; přerušovaná
+    svislá čára je aktuální cena podkladu S<sub>0</sub>, kroužky jsou body zvratu.
+  </p>
+</main>
+
+<!-- vše sbaleno do jednoho lokálního souboru: React + Recharts + komponenta (žádné CDN) -->
+<script src="opcni-strategie.js" defer></script>
+<script>
+window.addEventListener("load",function(){
+  setTimeout(function(){
+    var r=document.getElementById('root');
+    if(r && r.querySelector('.loadmsg')){
+      var f=document.querySelector('.tool-fallback'); if(f) f.style.display='block';
+      var l=r.querySelector('.loadmsg'); if(l) l.style.display='none';
+    }
+  },4000);
+});
+</script>
+</body>
+</html>
